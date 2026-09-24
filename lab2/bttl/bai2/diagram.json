@@ -1,0 +1,127 @@
+{
+  "version": 1,
+  "author": "Bai 2 - Debounce",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "board-esp32-devkit-v1",
+      "id": "esp",
+      "top": 0,
+      "left": 0,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "button",
+      "top": 160,
+      "left": 230,
+      "attrs": {
+        "color": "blue",
+        "label": "GPIO 18"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led1",
+      "top": -65,
+      "left": 250,
+      "attrs": {
+        "color": "red",
+        "label": "LED 1 - Button"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": -25,
+      "left": 210,
+      "rotate": 90,
+      "attrs": {
+        "value": "220"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led2",
+      "top": 20,
+      "left": 250,
+      "attrs": {
+        "color": "green",
+        "label": "LED 2 - Button"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r2",
+      "top": 60,
+      "left": 210,
+      "rotate": 90,
+      "attrs": {
+        "value": "220"
+      }
+    }
+  ],
+  "connections": [
+    [
+      "esp:18",
+      "button:1.l",
+      "blue",
+      []
+    ],
+    [
+      "button:2.l",
+      "esp:GND.1",
+      "black",
+      []
+    ],
+    [
+      "esp:TX0",
+      "$serialMonitor:RX",
+      "",
+      []
+    ],
+    [
+      "esp:RX0",
+      "$serialMonitor:TX",
+      "",
+      []
+    ],
+    [
+      "esp:4",
+      "r1:1",
+      "green",
+      []
+    ],
+    [
+      "r1:2",
+      "led1:A",
+      "green",
+      []
+    ],
+    [
+      "led1:C",
+      "esp:GND.2",
+      "black",
+      []
+    ],
+    [
+      "esp:5",
+      "r2:1",
+      "green",
+      []
+    ],
+    [
+      "r2:2",
+      "led2:A",
+      "green",
+      []
+    ],
+    [
+      "led2:C",
+      "esp:GND.2",
+      "black",
+      []
+    ]
+  ],
+  "dependencies": {}
+}

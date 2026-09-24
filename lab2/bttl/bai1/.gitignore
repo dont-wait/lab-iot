@@ -1,0 +1,6 @@
+# PlatformIO build files and downloaded dependencies
+.pio/
+
+# Temporary files and logs
+*.tmp
+*.log
