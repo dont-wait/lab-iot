@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "author": "",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-esp32-devkit-v1", "id": "esp", "top": 0, "left": 0, "attrs": {} },
+    { "type": "wokwi-dht22", "id": "dht", "top": -20, "left": 220, "attrs": { "temperature": "25", "humidity": "60" } },
+    { "type": "wokwi-lcd1602", "id": "lcd", "top": 130, "left": 180, "attrs": { "pins": "i2c" } },
+    { "type": "wokwi-pushbutton", "id": "button", "top": 170, "left": -120, "attrs": { "color": "blue", "label": "Fahrenheit" } },
+    { "type": "wokwi-led", "id": "led", "top": -100, "left": -120, "attrs": { "color": "red" } },
+    { "type": "wokwi-resistor", "id": "r1", "top": -45, "left": -80, "attrs": { "value": "220" } }
+  ],
+  "connections": [
+    [ "esp:3V3", "dht:VCC", "red", [] ],
+    [ "esp:GND.1", "dht:GND", "black", [] ],
+    [ "esp:D4", "dht:SDA", "green", [] ],
+    [ "esp:VIN", "lcd:VCC", "red", [] ],
+    [ "esp:GND.2", "lcd:GND", "black", [] ],
+    [ "esp:D21", "lcd:SDA", "blue", [] ],
+    [ "esp:D22", "lcd:SCL", "purple", [] ],
+    [ "esp:D18", "button:1.l", "green", [] ],
+    [ "esp:GND.3", "button:2.l", "black", [] ],
+    [ "esp:D2", "r1:1", "orange", [] ],
+    [ "r1:2", "led:A", "orange", [] ],
+    [ "esp:GND.4", "led:C", "black", [] ]
+  ],
+  "dependencies": {}
+}
