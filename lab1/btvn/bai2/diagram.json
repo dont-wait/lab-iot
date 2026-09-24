@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "author": "",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-esp32-devkit-v1", "id": "esp", "top": 0, "left": 0, "attrs": {} },
+    { "type": "wokwi-lcd1602", "id": "lcd", "top": 110, "left": 180, "attrs": { "pins": "i2c" } },
+    { "type": "wokwi-pushbutton", "id": "buttonA", "top": 150, "left": -150, "attrs": { "color": "green", "label": "A - Start/Pause" } },
+    { "type": "wokwi-pushbutton", "id": "buttonB", "top": 250, "left": -150, "attrs": { "color": "red", "label": "B - Reset" } }
+  ],
+  "connections": [
+    [ "esp:VIN", "lcd:VCC", "red", [] ],
+    [ "esp:GND.1", "lcd:GND", "black", [] ],
+    [ "esp:D21", "lcd:SDA", "blue", [] ],
+    [ "esp:D22", "lcd:SCL", "purple", [] ],
+    [ "esp:D18", "buttonA:1.l", "green", [] ],
+    [ "esp:GND.2", "buttonA:2.l", "black", [] ],
+    [ "esp:D19", "buttonB:1.l", "orange", [] ],
+    [ "esp:GND.3", "buttonB:2.l", "black", [] ]
+  ],
+  "dependencies": {}
+}
