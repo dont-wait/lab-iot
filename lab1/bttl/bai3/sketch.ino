@@ -1,42 +1,49 @@
 #include <Arduino.h>
 
-const int LED_PIN = 2;
+const int NUT_BAM = 2;
+const int LED = 8;
 
-const unsigned long LED_INTERVAL = 500;
-const unsigned long SERIAL_INTERVAL = 3000;
+bool ledState = false;         // trạng thái hiện tại của đèn (sáng/tắt)
+int trangThaiOnDinh = HIGH;    // trạng thái nút đã được xác nhận là ổn định (không nhiễu)
+int docTruoc = HIGH;           // giá trị đọc được ở lần loop() trước
 
-unsigned long lastLedToggle = 0;
-unsigned long lastSerialPrint = 0;
-
-bool ledState = false;
+unsigned long thoiDiemDoiTruoc = 0;
+const unsigned long THOI_GIAN_CHONG_NHIEU = 50; // ms
 
 void setup()
 {
-    Serial.begin(115200);
-    delay(500);
-    Serial.println("=== BOOT OK ===");
-    pinMode(LED_PIN, OUTPUT);
-    digitalWrite(LED_PIN, LOW);
+    pinMode(NUT_BAM, INPUT_PULLUP);
+    pinMode(LED, OUTPUT);
+    digitalWrite(LED, LOW);
 }
 
 void loop()
 {
-    unsigned long now = millis();
+    int docNut = digitalRead(NUT_BAM);
 
-    if (now - lastLedToggle >= LED_INTERVAL)
+    // Mỗi khi tín hiệu vừa đổi (do nhiễu hoặc do nhấn thật), reset lại mốc thời gian
+    if (docNut != docTruoc)
     {
-        lastLedToggle = now;
-        ledState = !ledState;
-        digitalWrite(LED_PIN, ledState);
+        thoiDiemDoiTruoc = millis();
     }
 
-    if (now - lastSerialPrint >= SERIAL_INTERVAL)
+    // Tín hiệu đã đứng yên đủ lâu (> 50ms) mới được xem là hợp lệ, không phải nhiễu
+    if ((millis() - thoiDiemDoiTruoc) > THOI_GIAN_CHONG_NHIEU)
     {
-        lastSerialPrint = now;
-        Serial.print("Uptime: ");
-        Serial.print(now);
-        Serial.println(" ms");
+        // Nếu trạng thái ổn định thực sự thay đổi so với lần xác nhận trước
+        if (docNut != trangThaiOnDinh)
+        {
+            trangThaiOnDinh = docNut;
+
+            // Chỉ đảo đèn tại thời điểm phát hiện NHẤN xuống (LOW),
+            // không đảo khi nhả ra -> mỗi lần bấm chỉ toggle đúng 1 lần
+            if (trangThaiOnDinh == LOW)
+            {
+                ledState = !ledState;
+                digitalWrite(LED, ledState);
+            }
+        }
     }
 
-    delay(10);
+    docTruoc = docNut;
 }
