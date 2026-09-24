@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "author": "Vo Duc Phuc",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "board-esp32-devkit-c-v4",
+      "id": "esp",
+      "top": 0,
+      "left": 0,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led1",
+      "top": -80,
+      "left": 250,
+      "attrs": { "color": "red" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": -20,
+      "left": 250,
+      "attrs": { "resistance": "220" }
+    }
+  ],
+  "connections": [
+    ["esp:2", "led1:A", "green", ["v0"]],
+    ["led1:C", "r1:1", "black", ["v0"]],
+    ["r1:2", "esp:GND.1", "black", ["v0"]]
+  ],
+  "dependencies": {},
+  "serialMonitor": {
+    "display": "always"
+  }
+}
