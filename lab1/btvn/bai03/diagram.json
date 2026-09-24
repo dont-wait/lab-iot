@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "author": "Kry",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "board-esp32-devkit-c-v4",
+      "id": "esp",
+      "top": -20,
+      "left": -20,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-lcd1602",
+      "id": "lcd",
+      "top": -100,
+      "left": 250,
+      "attrs": {
+        "pins": "i2c"
+      }
+    },
+    {
+      "type": "wokwi-dht22",
+      "id": "dht",
+      "top": 100,
+      "left": 300,
+      "attrs": {
+        "temperature": "25",
+        "humidity": "60"
+      }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "button",
+      "top": 200,
+      "left": 100,
+      "attrs": {
+        "color": "blue"
+      }
+    }
+  ],
+  "connections": [
+    ["esp:21", "lcd:SDA", "green", []],
+    ["esp:22", "lcd:SCL", "green", []],
+    ["esp:5V", "lcd:VCC", "red", []],
+    ["esp:GND.1", "lcd:GND", "black", []],
+
+    ["esp:4", "dht:SDA", "green", []],
+    ["esp:3V3", "dht:VCC", "red", []],
+    ["esp:GND.2", "dht:GND", "black", []],
+
+    ["esp:15", "button:1.l", "green", []],
+    ["esp:GND.3", "button:2.r", "black", []]
+  ]
+}
