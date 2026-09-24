@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "author": "Your Name",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "wokwi-arduino-uno",
+      "id": "uno",
+      "top": 0,
+      "left": 0,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-dht22",
+      "id": "dht1",
+      "top": -100,
+      "left": 220,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led1",
+      "top": -80,
+      "left": 340,
+      "attrs": { "color": "red" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": -20,
+      "left": 340,
+      "attrs": { "resistance": "220" }
+    }
+  ],
+  "connections": [
+    ["uno:5V", "dht1:VCC", "red", ["v0"]],
+    ["uno:GND.1", "dht1:GND", "black", ["v0"]],
+    ["uno:2", "dht1:SDA", "green", ["v0"]],
+
+    ["uno:8", "led1:A", "green", ["v0"]],
+    ["led1:C", "r1:1", "black", ["v0"]],
+    ["r1:2", "uno:GND.2", "black", ["v0"]]
+  ],
+  "dependencies": {}
+}
