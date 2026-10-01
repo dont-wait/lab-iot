@@ -7,8 +7,7 @@
 ## Chuẩn bị
 
 1. Cài thư viện nếu chưa có: `python -m pip install requests`.
-2. Tạo webhook tại <https://webhook.site> và sao chép URL.
-3. Thay `YOUR-WEBHOOK-URL` trong `main.py` bằng URL đó.
+2. URL webhook đang được gán trực tiếp trong `main.py`; có thể thay bằng URL webhook riêng của bạn.
 
 ## Chạy bài
 
@@ -20,4 +19,4 @@ Mã gửi header `X-API-Key: my_secret_key_123`. Mở request vừa nhận trên
 
 ## Kết quả mong đợi
 
-Terminal hiển thị status code và response body. Chi tiết request trên Webhook.site có JSON cảm biến và header `X-API-Key`.
+Terminal hiển thị status code `302` và response body mặc định của Webhook.site. Chi tiết request trên Webhook.site có JSON cảm biến và header `X-API-Key`.
