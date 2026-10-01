@@ -55,13 +55,43 @@
 | [Bài 7](lab2/btvn/bai7) | Đọc nhiệt độ DHT bằng FreeRTOS và queue; bật còi 2 kHz nhấp nháy khi nhiệt độ vượt 30°C. | ESP32 |
 | [Bài 8](lab2/btvn/bai8) | Điều chỉnh độ sáng LED bằng PWM qua nút nhấn theo 5 mức, đồng thời cho LED nguồn nhấp nháy chu kỳ 1,5 giây. | ESP32 |
 
+### Lab 3
+
+#### Bài trên lớp (`lab3/bttl`)
+
+| Bài | Nội dung | Nền tảng |
+|---|---|---|
+| [Bài 1](lab3/bttl/bai1) | Quét các mạng Wi-Fi xung quanh và in SSID, cường độ tín hiệu RSSI, trạng thái mã hóa lên Serial Monitor. | ESP32 |
+| [Bài 2](lab3/bttl/bai2) | Kết nối Wi-Fi, theo dõi sự kiện kết nối/ngắt kết nối và tự thử kết nối lại khi mất mạng. | ESP32 |
+| [Bài 3](lab3/bttl/bai3) | Dùng WiFiManager kết nối mạng đã lưu hoặc mở captive portal để cấu hình Wi-Fi. | ESP32 |
+| [Bài 4](lab3/bttl/bai4) | Kết nối Wi-Fi, đồng bộ thời gian với máy chủ NTP và in giờ Việt Nam lên Serial Monitor. | ESP32 |
+| [Bài 5](lab3/bttl/bai5) | Hiển thị ngày giờ NTP trên LCD I2C và báo trạng thái Wi-Fi. | ESP32 |
+
+#### Bài về nhà (`lab3/btvn`)
+
+| Bài | Nội dung | Nền tảng |
+|---|---|---|
+| [Bài 1](lab3/btvn/bai1) | Theo dõi Wi-Fi và ping Internet định kỳ; khởi động lại ESP32 sau ba lần kiểm tra liên tiếp thất bại. | ESP32 |
+| [Bài 2](lab3/btvn/bai2) | Đồng bộ thời gian NTP, hiển thị thời gian trước/sau đồng bộ và tự đồng bộ lại định kỳ. | ESP32 |
+| [Bài 3](lab3/btvn/bai3) | Đồng hồ LCD dùng WiFiManager, NTP và Preferences để lưu mốc thời gian gần nhất khi mất điện hoặc mạng. | ESP32 |
+
 ### Lab 4
+
+#### Bài trên lớp (`lab4/bttl`)
 
 | Bài | Nội dung | Nền tảng |
 |---|---|---|
 | [Bài 3](lab4/bttl/bai3) | Gửi dữ liệu cảm biến dạng JSON bằng HTTP POST với Python `requests`; xem mã trạng thái và phản hồi trên Webhook.site. | Python |
 | [Bài 4](lab4/bttl/bai4) | Gửi HTTP POST kèm API Key trong header và kiểm tra header nhận được trên Webhook.site. | Python |
 | [Bài 5](lab4/bttl/bai5) | Bắt lỗi timeout và mất kết nối khi gửi HTTP POST bằng Python `requests`. | Python |
+
+#### Bài về nhà (`lab4/btvn`)
+
+| Bài | Nội dung | Nền tảng |
+|---|---|---|
+| [Bài 1](lab4/btvn/bai1) | Tạo nhiệt độ, độ ẩm giả lập và gửi JSON lên Webhook.site định kỳ mỗi 10 giây. | Python |
+| [Bài 2](lab4/btvn/bai2) | Tạo Flask endpoint `POST /api/sensor` và Python client gửi dữ liệu cảm biến JSON đến server nội bộ. | Python, Flask |
+| [Bài 3](lab4/btvn/bai3) | Đọc DHT22 trên ESP32 và gửi dữ liệu cảm biến lên Webhook.site bằng HTTP POST. | ESP32 |
 
 ## Cấu trúc thư mục
 
@@ -70,9 +100,15 @@
 ├── lab1/
 │   ├── bttl/       # Bài thực hành trên lớp
 │   └── btvn/       # Bài tập về nhà
-└── lab2/
+├── lab2/
     ├── bttl/       # Bài thực hành trên lớp
     └── btvn/       # Bài tập về nhà
+├── lab3/
+│   ├── bttl/       # Wi-Fi và NTP trên ESP32
+│   └── btvn/       # Watchdog Internet và đồng hồ NTP
+└── lab4/
+    ├── bttl/       # HTTP POST với Python requests
+    └── btvn/       # Gửi và nhận dữ liệu cảm biến qua HTTP
 ```
 
 Mỗi thư mục bài thường gồm:
@@ -87,11 +123,11 @@ Mỗi thư mục bài thường gồm:
 - [PlatformIO](https://platformio.org/)
 - [Wokwi](https://wokwi.com/)
 - Arduino Uno và ESP32 DevKit
-- C++/Arduino Framework
+- C++/Arduino Framework và Python
 
 ## Cách chạy một bài
 
-Di chuyển vào thư mục bài cần chạy, sau đó dùng PlatformIO:
+Với bài Arduino/ESP32, di chuyển vào thư mục bài cần chạy, sau đó dùng PlatformIO:
 
 ```bash
 pio run
@@ -99,4 +135,4 @@ pio run -t upload
 pio device monitor
 ```
 
-Các bài có `diagram.json` có thể mở trực tiếp bằng Wokwi để mô phỏng mạch và quan sát kết quả.
+Các bài có `diagram.json` có thể mở trực tiếp bằng Wokwi để mô phỏng mạch và quan sát kết quả. Với bài Python, xem README trong thư mục bài để cài thư viện và chạy chương trình.
