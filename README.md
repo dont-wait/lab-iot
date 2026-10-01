@@ -55,6 +55,14 @@
 | [Bài 7](lab2/btvn/bai7) | Đọc nhiệt độ DHT bằng FreeRTOS và queue; bật còi 2 kHz nhấp nháy khi nhiệt độ vượt 30°C. | ESP32 |
 | [Bài 8](lab2/btvn/bai8) | Điều chỉnh độ sáng LED bằng PWM qua nút nhấn theo 5 mức, đồng thời cho LED nguồn nhấp nháy chu kỳ 1,5 giây. | ESP32 |
 
+### Lab 4
+
+| Bài | Nội dung | Nền tảng |
+|---|---|---|
+| [Bài 3](lab4/bttl/bai3) | Gửi dữ liệu cảm biến dạng JSON bằng HTTP POST với Python `requests`; xem mã trạng thái và phản hồi trên Webhook.site. | Python |
+| [Bài 4](lab4/bttl/bai4) | Gửi HTTP POST kèm API Key trong header và kiểm tra header nhận được trên Webhook.site. | Python |
+| [Bài 5](lab4/bttl/bai5) | Bắt lỗi timeout và mất kết nối khi gửi HTTP POST bằng Python `requests`. | Python |
+
 ## Cấu trúc thư mục
 
 ```text
