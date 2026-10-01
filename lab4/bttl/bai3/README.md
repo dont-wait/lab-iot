@@ -13,8 +13,7 @@ Tự động gửi dữ liệu cảm biến dạng JSON đến Webhook.site bằ
    python -m pip install requests
    ```
 
-3. Truy cập <https://webhook.site>, tạo một webhook và sao chép URL riêng.
-4. Thay `YOUR-WEBHOOK-URL` trong `main.py` bằng URL đã sao chép.
+3. URL webhook đang được gán trực tiếp trong `main.py`; có thể thay bằng URL webhook riêng của bạn.
 
 ## Chạy bài
 
@@ -26,4 +25,4 @@ Chương trình gửi dữ liệu cố định để kết quả dễ đối chi
 
 ## Kết quả mong đợi
 
-Terminal hiển thị mã trạng thái HTTP (thường là `200`) cùng nội dung phản hồi từ Webhook.site. Trong trang webhook có thể mở request mới nhất để xem JSON đã nhận.
+Terminal hiển thị mã trạng thái HTTP cùng nội dung phản hồi từ Webhook.site. URL Webhook.site hiện trả về `302` và thông báo chưa cấu hình nội dung phản hồi mặc định; request vẫn xuất hiện trong lịch sử webhook. Trong trang webhook có thể mở request mới nhất để xem JSON đã nhận.
