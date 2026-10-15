@@ -1,0 +1,5 @@
+# File chua password hash, khong commit vao repository.
+passwd
+
+# Moi truong Python neu dung chung voi bai 1.
+.venv/

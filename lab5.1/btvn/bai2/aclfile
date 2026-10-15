@@ -1,0 +1,8 @@
+# Gateway duoc doc du lieu sensor va publish report tong hop.
+user gateway-client
+topic read sensor/+/data
+topic write gateway/aggregated_report
+
+# Sensor node chi duoc publish du lieu cua minh.
+user sensor-client
+topic write sensor/+/data
