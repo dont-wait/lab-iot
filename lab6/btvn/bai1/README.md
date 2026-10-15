@@ -1,6 +1,6 @@
 # Lab 6 - Bài tập về nhà 1: Gửi dữ liệu môi trường qua MQTT
 
-ESP32 đọc DHT22 và quang trở, sau đó publish một JSON mỗi 10 giây lên `vnhome/esp32-yourname/sensor/data`. Sửa `esp32-yourname` thành tên riêng để tránh trùng topic với người khác. DHT mặc định trong code là DHT22; nếu dùng DHT11, đổi `DHT_TYPE` trong `src/main.cpp`.
+ESP32 đọc DHT22 và quang trở, sau đó publish một JSON mỗi 10 giây lên `vnhome/esp32-dontwait/sensor/data`. Sửa `esp32-dontwait`. DHT mặc định trong code là DHT22; nếu dùng DHT11, đổi `DHT_TYPE` trong `src/main.cpp`.
 
 ## Kết nối
 

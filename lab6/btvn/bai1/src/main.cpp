@@ -14,7 +14,7 @@ constexpr char WIFI_SSID[] = "Wokwi-GUEST";
 constexpr char WIFI_PASSWORD[] = "";
 constexpr char MQTT_HOST[] = "broker.hivemq.com";
 constexpr uint16_t MQTT_PORT = 1883;
-constexpr char MQTT_TOPIC[] = "vnhome/esp32-yourname/sensor/data";
+constexpr char MQTT_TOPIC[] = "vnhome/esp32-dontwait/sensor/data";
 
 WiFiClient network;
 PubSubClient mqtt(network);

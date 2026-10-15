@@ -1,6 +1,6 @@
 # Lab 6 - Bài tập về nhà 2: Điều khiển nhiều thiết bị bằng JSON
 
-ESP32 subscribe topic `vnhome/esp32-yourname/device/cmd` và phân luồng theo trường `target`. Đổi `esp32-yourname` trong code để dùng topic riêng.
+ESP32 subscribe topic `vnhome/esp32-dontwait/device/cmd` và phân luồng theo trường `target`. 
 
 | Lệnh | Tác dụng |
 |---|---|
