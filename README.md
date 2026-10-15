@@ -93,6 +93,16 @@
 | [Bài 2](lab4/btvn/bai2) | Tạo Flask endpoint `POST /api/sensor` và Python client gửi dữ liệu cảm biến JSON đến server nội bộ. | Python, Flask |
 | [Bài 3](lab4/btvn/bai3) | Đọc DHT22 trên ESP32 và gửi dữ liệu cảm biến lên Webhook.site bằng HTTP POST. | ESP32 |
 
+### Lab 6
+
+#### Bài tập về nhà (`lab6/btvn`)
+
+| Bài | Nội dung | Nền tảng |
+|---|---|---|
+| [Bài 1](lab6/btvn/bai1) | Đọc DHT và quang trở, đóng gói nhiệt độ, độ ẩm, ánh sáng và RSSI thành JSON rồi publish MQTT mỗi 10 giây. | ESP32, MQTT |
+| [Bài 2](lab6/btvn/bai2) | Giải mã JSON MQTT để điều khiển độc lập đèn và quạt theo target/action hoặc speed. | ESP32, MQTT |
+| [Bài 3](lab6/btvn/bai3) | Nhận lệnh bật/tắt qua MQTT, cập nhật thiết bị và publish ACK trạng thái dạng JSON. | ESP32, MQTT |
+
 ## Cấu trúc thư mục
 
 ```text
@@ -101,14 +111,16 @@
 │   ├── bttl/       # Bài thực hành trên lớp
 │   └── btvn/       # Bài tập về nhà
 ├── lab2/
-    ├── bttl/       # Bài thực hành trên lớp
-    └── btvn/       # Bài tập về nhà
+│   ├── bttl/       # Bài thực hành trên lớp
+│   └── btvn/       # Bài tập về nhà
 ├── lab3/
 │   ├── bttl/       # Wi-Fi và NTP trên ESP32
 │   └── btvn/       # Watchdog Internet và đồng hồ NTP
-└── lab4/
-    ├── bttl/       # HTTP POST với Python requests
-    └── btvn/       # Gửi và nhận dữ liệu cảm biến qua HTTP
+├── lab4/
+│   ├── bttl/       # HTTP POST với Python requests
+│   └── btvn/       # Gửi và nhận dữ liệu cảm biến qua HTTP
+└── lab6/
+    └── btvn/       # Trao đổi JSON qua MQTT
 ```
 
 Mỗi thư mục bài thường gồm:

@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "author": "Lab 6 - bai3",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-esp32-devkit-v1", "id": "esp", "top": 0, "left": 0, "attrs": {} },
+    { "type": "wokwi-led", "id": "light", "top": 40, "left": 220, "attrs": { "color": "yellow" } },
+    { "type": "wokwi-resistor", "id": "r1", "top": 110, "left": 185, "attrs": { "value": "220" } }
+  ],
+  "connections": [
+    [ "esp:18", "light:A", "green", [] ], [ "light:C", "r1:1", "black", [] ], [ "r1:2", "esp:GND.1", "black", [] ]
+  ],
+  "dependencies": {}
+}
