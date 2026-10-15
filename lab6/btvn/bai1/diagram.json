@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "author": "Lab 6 - bai1",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-esp32-devkit-v1", "id": "esp", "top": 0, "left": 0, "attrs": {} },
+    { "type": "wokwi-dht22", "id": "dht", "top": -35, "left": 220, "attrs": { "temperature": "25", "humidity": "60" } },
+    { "type": "wokwi-photoresistor-sensor", "id": "ldr", "top": 105, "left": 220, "attrs": {} }
+  ],
+  "connections": [
+    [ "esp:3V3", "dht:VCC", "red", [] ], [ "esp:GND.1", "dht:GND", "black", [] ], [ "esp:15", "dht:SDA", "green", [] ],
+    [ "esp:3V3", "ldr:VCC", "red", [] ], [ "esp:GND.1", "ldr:GND", "black", [] ], [ "esp:34", "ldr:AO", "green", [] ]
+  ],
+  "dependencies": {}
+}
