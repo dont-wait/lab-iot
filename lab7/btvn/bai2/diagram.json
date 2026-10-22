@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp1", "top": 61.2, "left": 10, "attrs": {} },
+    {
+      "type": "wokwi-dht22",
+      "id": "dht1",
+      "top": 60,
+      "left": 211.16,
+      "attrs": { "temperature": "25", "humidity": "60" }
+    }
+  ],
+  "connections": [
+    [ "esp1:3V3", "dht1:VCC", "red", [] ],
+    [ "esp1:GND.1", "dht1:GND", "black", [] ],
+    [ "esp1:4", "dht1:SDA", "green", [] ]
+  ],
+  "dependencies": {}
+}
