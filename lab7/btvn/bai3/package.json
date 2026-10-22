@@ -1,0 +1,24 @@
+{
+  "name": "lab7-btvn-bai3-rbac-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Lab 7 - Bai 3: phan quyen truy cap va chia se Dashboard IoT da nguoi dung (Node-RED Dashboard + RBAC)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node tests/verify_rbac.js",
+    "test:e2e": "node tests/e2e_dashboard.js",
+    "build:flows": "node tools/build_flows.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "node-red": "^4.0.9",
+    "node-red-dashboard": "^3.6.5"
+  },
+  "devDependencies": {
+    "jsdom": "^26.0.0"
+  }
+}

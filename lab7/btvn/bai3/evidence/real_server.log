@@ -1,0 +1,28 @@
+==========================================================================
+SMOKE TEST SERVER THAT - LAB 7 BAI 3
+Thoi diem: 2026-10-22T21:46:04+07:00
+Base URL: http://127.0.0.1:1881
+==========================================================================
+
+[1] Chua dang nhap
+PASS  anon /ui -> 302 — 302
+PASS  anon /api/state -> 401 — 401
+
+[2] Tai khoan viewer (read-only)
+PASS  viewer dang nhap -> 200 — 200
+PASS  viewer mo /ui -> 200 — 200
+PASS  viewer xem thong so -> 200 — 200
+PASS  viewer dieu khien -> 403 — 403
+PASS  403 neu ro requiredPermission=device:control
+INFO  Trang thai den sau khi viewer thu dieu khien: ON
+
+[3] Tai khoan admin
+PASS  admin dang nhap -> 200 — 200
+PASS  admin doc danh sach tai khoan -> 200 — 200
+PASS  API khong lo password hash
+PASS  admin dieu khien -> 200 — 200
+PASS  Trang thai den = ON
+
+==========================================================================
+KET QUA SMOKE: 12 PASS, 0 FAIL
+==========================================================================

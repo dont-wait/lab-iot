@@ -1,0 +1,251 @@
+[
+  {
+    "id": "bai3-tab",
+    "type": "tab",
+    "label": "Bài 3 · Phân quyền Dashboard",
+    "disabled": false,
+    "info": "# Bài 3 - Phân quyền truy cập và chia sẻ Dashboard\n\nDashboard giám sát IoT có hai vai trò:\n- admin: xem + điều khiển + quản lý người dùng.\n- viewer: chỉ xem thông số, nút điều khiển bị vô hiệu hóa.\n\nXác thực và phân quyền nằm ở rbac.js (settings.js).\nTemplate chỉ hiển thị theo quyền do /api/rbac/me trả về;\nmọi lệnh điều khiển đều bị kiểm tra lại ở máy chủ."
+  },
+  {
+    "id": "ui-base",
+    "type": "ui_base",
+    "name": "RBAC Dashboard",
+    "theme": {
+      "name": "theme-source",
+      "lightTheme": {
+        "default": "#334155",
+        "baseColor": "#ffffff",
+        "primaryColor": "#0ea5e9",
+        "pageBackgroundColor": "#f1f5f9",
+        "headerColor": "#0f172a",
+        "groupTextColor": "#0f172a",
+        "groupBackgroundColor": "#ffffff",
+        "groupBorderColor": "#dbe3ee",
+        "widgetTextColor": "#0f172a",
+        "widgetBackgroundColor": "#ffffff",
+        "widgetAccentColor": "#0ea5e9",
+        "widgetBorderColor": "#dbe3ee"
+      },
+      "darkTheme": {
+        "default": "#cbd5e1",
+        "baseColor": "#0b1220",
+        "primaryColor": "#38bdf8",
+        "pageBackgroundColor": "#0b1220",
+        "headerColor": "#020617",
+        "groupTextColor": "#e2e8f0",
+        "groupBackgroundColor": "#111c2e",
+        "groupBorderColor": "#1e293b",
+        "widgetTextColor": "#e2e8f0",
+        "widgetBackgroundColor": "#111c2e",
+        "widgetAccentColor": "#38bdf8",
+        "widgetBorderColor": "#1e293b"
+      }
+    },
+    "site": {
+      "name": "Lab 7 · Phân quyền Dashboard",
+      "hideToolbar": "false",
+      "hideStatus": "false",
+      "hidePoweredBy": "true",
+      "hideTabbar": "false",
+      "pagesAsTabs": "false",
+      "showPageTitle": true
+    },
+    "sizes": {
+      "sx": 32,
+      "sy": 32,
+      "gx": 6,
+      "gy": 6,
+      "cx": 6,
+      "cy": 6,
+      "px": 0,
+      "py": 0
+    },
+    "sidebar": {
+      "name": "menu",
+      "icon": "menu",
+      "order": -1,
+      "sizing": "100%",
+      "width": "250px",
+      "dismissable": true,
+      "show": false
+    },
+    "allowSwipe": true,
+    "lockMenu": false,
+    "allowTempTheme": true,
+    "dateFormat": "DD/MM/YYYY"
+  },
+  {
+    "id": "ui-tab-monitor",
+    "type": "ui_tab",
+    "name": "Giám sát phòng khách",
+    "icon": "dashboard",
+    "order": 1,
+    "disabled": false,
+    "hidden": false
+  },
+  {
+    "id": "ui-group-sensor",
+    "type": "ui_group",
+    "name": "🌡️ Thông số cảm biến",
+    "tab": "ui-tab-monitor",
+    "order": 1,
+    "disp": true,
+    "width": "12",
+    "collapse": false,
+    "className": "sensor-area"
+  },
+  {
+    "id": "ui-group-control",
+    "type": "ui_group",
+    "name": "🎛️ Điều khiển & phân quyền",
+    "tab": "ui-tab-monitor",
+    "order": 2,
+    "disp": true,
+    "width": "12",
+    "collapse": false,
+    "className": "control-area"
+  },
+  {
+    "id": "template-style",
+    "type": "ui_template",
+    "z": "bai3-tab",
+    "group": "ui-group-sensor",
+    "name": "CSS giao diện",
+    "order": 0,
+    "width": 12,
+    "height": 0,
+    "format": "<style>\n/* Giao dien dung chung cho hai template Dashboard (Lab 7 - Bai 3). */\n:root {\n    --iot-bg: #f8fafc;\n    --iot-card: #ffffff;\n    --iot-border: #dbe3ee;\n    --iot-text: #0f172a;\n    --iot-muted: #64748b;\n    --iot-accent: #0ea5e9;\n    --iot-ok: #16a34a;\n    --iot-warn: #f59e0b;\n    --iot-danger: #dc2626;\n    --iot-radius: 16px;\n}\n\n@media (prefers-color-scheme: dark) {\n    :root {\n        --iot-bg: #0b1220;\n        --iot-card: #111c2e;\n        --iot-border: #1e293b;\n        --iot-text: #e2e8f0;\n        --iot-muted: #94a3b8;\n        --iot-accent: #38bdf8;\n    }\n}\n\n.iot-sensor,\n.iot-control {\n    font-family: ui-sans-serif, system-ui, 'Segoe UI', sans-serif;\n    color: var(--iot-text);\n}\n\n.iot-grid {\n    display: grid;\n    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));\n    gap: 14px;\n}\n\n.iot-card {\n    background: var(--iot-card);\n    border: 1px solid var(--iot-border);\n    border-radius: var(--iot-radius);\n    padding: 16px 18px;\n    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);\n}\n\n.iot-card header {\n    font-size: 13px;\n    color: var(--iot-muted);\n    letter-spacing: 0.02em;\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n}\n\n.iot-value {\n    font-size: 34px;\n    font-weight: 700;\n    line-height: 1.15;\n    margin-top: 8px;\n    font-variant-numeric: tabular-nums;\n}\n\n.iot-value small {\n    font-size: 15px;\n    font-weight: 500;\n    color: var(--iot-muted);\n    margin-left: 4px;\n}\n\n.iot-pill {\n    display: inline-flex;\n    align-items: center;\n    gap: 6px;\n    padding: 4px 10px;\n    border-radius: 999px;\n    font-size: 12px;\n    font-weight: 600;\n    border: 1px solid var(--iot-border);\n    background: rgba(148, 163, 184, 0.14);\n}\n\n.iot-pill[data-tone='on'] {\n    color: #166534;\n    background: rgba(34, 197, 94, 0.16);\n    border-color: rgba(34, 197, 94, 0.4);\n}\n\n.iot-pill[data-tone='off'] {\n    color: var(--iot-muted);\n}\n\n.iot-pill[data-tone='role'] {\n    color: var(--iot-accent);\n    border-color: rgba(14, 165, 233, 0.4);\n    background: rgba(14, 165, 233, 0.12);\n}\n\n.iot-chart-wrap {\n    margin-top: 16px;\n    background: var(--iot-card);\n    border: 1px solid var(--iot-border);\n    border-radius: var(--iot-radius);\n    padding: 12px 14px 8px;\n}\n\n.iot-chart-head {\n    display: flex;\n    flex-wrap: wrap;\n    gap: 14px;\n    align-items: center;\n    font-size: 12px;\n    color: var(--iot-muted);\n    margin-bottom: 6px;\n}\n\n.iot-legend {\n    display: inline-flex;\n    align-items: center;\n    gap: 6px;\n}\n\n.iot-dot {\n    width: 9px;\n    height: 9px;\n    border-radius: 50%;\n    display: inline-block;\n}\n\n.iot-chart-wrap canvas {\n    width: 100%;\n    height: 130px;\n    display: block;\n}\n\n.iot-meta {\n    margin-top: 12px;\n    font-size: 12.5px;\n    color: var(--iot-muted);\n    display: flex;\n    flex-wrap: wrap;\n    gap: 6px 16px;\n    align-items: center;\n}\n\n.iot-userbar {\n    display: flex;\n    flex-wrap: wrap;\n    align-items: center;\n    gap: 10px 14px;\n    padding: 12px 14px;\n    border: 1px solid var(--iot-border);\n    border-radius: var(--iot-radius);\n    background: var(--iot-card);\n    margin-bottom: 14px;\n}\n\n.iot-userbar strong {\n    font-size: 14px;\n}\n\n.iot-userbar .iot-spacer {\n    flex: 1;\n}\n\n.iot-btn {\n    border: 1px solid var(--iot-border);\n    background: var(--iot-card);\n    color: var(--iot-text);\n    border-radius: 10px;\n    padding: 10px 14px;\n    font-size: 13.5px;\n    font-weight: 600;\n    cursor: pointer;\n    transition: transform 0.05s ease, filter 0.15s ease;\n}\n\n.iot-btn:hover:not(:disabled) {\n    filter: brightness(1.05);\n}\n\n.iot-btn:active:not(:disabled) {\n    transform: translateY(1px);\n}\n\n.iot-btn:disabled {\n    cursor: not-allowed;\n    opacity: 0.45;\n    filter: grayscale(0.6);\n}\n\n.iot-btn[data-variant='primary'] {\n    background: linear-gradient(135deg, #0284c7, #0ea5e9);\n    border-color: transparent;\n    color: #f8fafc;\n}\n\n.iot-btn[data-variant='warning'] {\n    background: linear-gradient(135deg, #d97706, #f59e0b);\n    border-color: transparent;\n    color: #1f2937;\n}\n\n.iot-btn[data-variant='ghost'] {\n    background: transparent;\n}\n\n.iot-actions {\n    display: flex;\n    flex-wrap: wrap;\n    gap: 10px;\n    margin: 4px 0 2px;\n}\n\n.iot-lock {\n    display: flex;\n    gap: 12px;\n    align-items: flex-start;\n    padding: 14px 16px;\n    border-radius: var(--iot-radius);\n    border: 1px solid rgba(245, 158, 11, 0.45);\n    background: rgba(245, 158, 11, 0.12);\n    color: #92400e;\n    font-size: 13.5px;\n    line-height: 1.5;\n    margin-bottom: 12px;\n}\n\n@media (prefers-color-scheme: dark) {\n    .iot-lock {\n        color: #fcd34d;\n    }\n}\n\n.iot-lock strong {\n    display: block;\n    margin-bottom: 2px;\n}\n\n.iot-msg {\n    min-height: 20px;\n    font-size: 13px;\n    color: var(--iot-muted);\n    margin: 10px 0 0;\n}\n\n.iot-msg[data-tone='error'] {\n    color: var(--iot-danger);\n}\n\n.iot-msg[data-tone='ok'] {\n    color: var(--iot-ok);\n}\n\n.iot-section-title {\n    font-size: 13px;\n    font-weight: 700;\n    letter-spacing: 0.04em;\n    text-transform: uppercase;\n    color: var(--iot-muted);\n    margin: 20px 0 8px;\n}\n\n.iot-table {\n    width: 100%;\n    border-collapse: collapse;\n    font-size: 13px;\n}\n\n.iot-table th,\n.iot-table td {\n    text-align: left;\n    padding: 8px 10px;\n    border-bottom: 1px solid var(--iot-border);\n}\n\n.iot-table th {\n    color: var(--iot-muted);\n    font-weight: 600;\n    font-size: 12px;\n}\n\n.iot-note {\n    font-size: 12.5px;\n    color: var(--iot-muted);\n    margin: 6px 0 0;\n}\n\n</style>",
+    "storeOutMessages": true,
+    "fwdInMessages": true,
+    "resendOnRefresh": false,
+    "templateScope": "local",
+    "className": "",
+    "x": 180,
+    "y": 80,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "template-sensor",
+    "type": "ui_template",
+    "z": "bai3-tab",
+    "group": "ui-group-sensor",
+    "name": "Bảng thông số (mọi vai trò)",
+    "order": 1,
+    "width": 12,
+    "height": 0,
+    "format": "<div class=\"iot-sensor\" id=\"iot-sensor\">\n  <div class=\"iot-grid\">\n    <article class=\"iot-card\">\n      <header><span>🌡️ Nhiệt độ</span><span class=\"iot-pill\" id=\"iot-temp-trend\">--</span></header>\n      <div class=\"iot-value\"><span id=\"iot-temp\">--</span><small>°C</small></div>\n    </article>\n    <article class=\"iot-card\">\n      <header><span>💧 Độ ẩm</span><span class=\"iot-pill\" id=\"iot-hum-trend\">--</span></header>\n      <div class=\"iot-value\"><span id=\"iot-hum\">--</span><small>%</small></div>\n    </article>\n    <article class=\"iot-card\">\n      <header><span>💡 Đèn phòng khách</span><span class=\"iot-pill\" id=\"iot-lamp-pill\" data-tone=\"off\">--</span></header>\n      <div class=\"iot-value\" style=\"font-size:22px\" id=\"iot-lamp-text\">Đang chờ dữ liệu</div>\n    </article>\n  </div>\n\n  <div class=\"iot-chart-wrap\">\n    <div class=\"iot-chart-head\">\n      <span class=\"iot-legend\"><i class=\"iot-dot\" style=\"background:#f97316\"></i> Nhiệt độ (°C)</span>\n      <span class=\"iot-legend\"><i class=\"iot-dot\" style=\"background:#06b6d4\"></i> Độ ẩm (%)</span>\n      <span class=\"iot-spacer\" style=\"flex:1\"></span>\n      <span id=\"iot-range\">180 điểm gần nhất</span>\n    </div>\n    <canvas id=\"iot-chart\" width=\"1200\" height=\"260\"></canvas>\n  </div>\n\n  <div class=\"iot-meta\">\n    <span>📟 Thiết bị: <strong id=\"iot-device\">--</strong></span>\n    <span>🕒 Cập nhật: <strong id=\"iot-updated\">--</strong></span>\n    <span id=\"iot-source\"></span>\n  </div>\n</div>\n\n<script>\n(function () {\n  'use strict';\n  var TEMP_COLOR = '#f97316';\n  var HUM_COLOR = '#06b6d4';\n  var state = { history: { temperature: [], humidity: [] } };\n\n  function $(id) { return document.getElementById(id); }\n\n  function fmt(value, digits) {\n    if (value === null || value === undefined || Number.isNaN(value)) { return '--'; }\n    return Number(value).toFixed(digits === undefined ? 1 : digits);\n  }\n\n  function trend(series) {\n    if (!series || series.length < 2) { return '--'; }\n    var delta = series[series.length - 1].v - series[series.length - 2].v;\n    return (delta >= 0 ? '▲ +' : '▼ ') + delta.toFixed(1);\n  }\n\n  function drawChart() {\n    var canvas = $('iot-chart');\n    if (!canvas) { return; }\n    var ctx = canvas.getContext('2d');\n    var width = canvas.width;\n    var height = canvas.height;\n    var pad = 10;\n    ctx.clearRect(0, 0, width, height);\n\n    var styles = getComputedStyle(document.documentElement);\n    var grid = styles.getPropertyValue('--iot-border').trim() || '#dbe3ee';\n    var muted = styles.getPropertyValue('--iot-muted').trim() || '#64748b';\n\n    ctx.strokeStyle = grid;\n    ctx.lineWidth = 1;\n    ctx.globalAlpha = 0.7;\n    for (var row = 1; row <= 3; row++) {\n      var y = pad + ((height - 2 * pad) * row) / 4;\n      ctx.beginPath();\n      ctx.moveTo(pad, y);\n      ctx.lineTo(width - pad, y);\n      ctx.stroke();\n    }\n    ctx.globalAlpha = 1;\n\n    var series = [\n      { points: state.history.temperature || [], min: 0, max: 50, color: TEMP_COLOR },\n      { points: state.history.humidity || [], min: 0, max: 100, color: HUM_COLOR }\n    ];\n    var maxLength = Math.max(series[0].points.length, series[1].points.length);\n    if (maxLength === 0) {\n      ctx.fillStyle = muted;\n      ctx.font = '16px system-ui, sans-serif';\n      ctx.textAlign = 'center';\n      ctx.fillText('Đang chờ dữ liệu cảm biến...', width / 2, height / 2);\n      return;\n    }\n\n    series.forEach(function (item) {\n      var points = item.points;\n      if (points.length === 0) { return; }\n      ctx.beginPath();\n      ctx.strokeStyle = item.color;\n      ctx.lineWidth = 3;\n      ctx.lineJoin = 'round';\n      var step = points.length > 1 ? (width - 2 * pad) / (points.length - 1) : 0;\n      points.forEach(function (point, index) {\n        var x = pad + step * index;\n        var ratio = Math.min(1, Math.max(0, (point.v - item.min) / (item.max - item.min)));\n        var y = height - pad - ratio * (height - 2 * pad);\n        if (index === 0) { ctx.moveTo(x, y); } else { ctx.lineTo(x, y); }\n      });\n      ctx.stroke();\n    });\n  }\n\n  function render() {\n    var lastTemp = state.history.temperature[state.history.temperature.length - 1];\n    var lastHum = state.history.humidity[state.history.humidity.length - 1];\n    $('iot-temp').textContent = lastTemp ? fmt(lastTemp.v) : '--';\n    $('iot-hum').textContent = lastHum ? fmt(lastHum.v) : '--';\n    $('iot-temp-trend').textContent = trend(state.history.temperature);\n    $('iot-hum-trend').textContent = trend(state.history.humidity);\n\n    var lampOn = state.state && state.state.lamp === 'ON';\n    var pill = $('iot-lamp-pill');\n    pill.textContent = lampOn ? '● Đang bật' : '○ Đang tắt';\n    pill.setAttribute('data-tone', lampOn ? 'on' : 'off');\n    $('iot-lamp-text').textContent = lampOn ? 'Đang bật' : 'Đang tắt';\n    $('iot-lamp-text').style.color = lampOn ? 'var(--iot-ok)' : 'var(--iot-muted)';\n    $('iot-device').textContent = (state.state && state.state.deviceId) || '--';\n    $('iot-updated').textContent = state.state && state.state.updatedAt\n      ? new Date(state.state.updatedAt).toLocaleString('vi-VN')\n      : '--';\n    $('iot-range').textContent = Math.max(state.history.temperature.length, state.history.humidity.length) + ' điểm gần nhất';\n    drawChart();\n  }\n\n  function refresh() {\n    fetch('/api/state', { credentials: 'same-origin', cache: 'no-store' })\n      .then(function (response) {\n        if (response.status === 401) { window.location.replace('/login?next=' + encodeURIComponent('/ui')); return null; }\n        if (!response.ok) { throw new Error('HTTP ' + response.status); }\n        return response.json();\n      })\n      .then(function (data) { if (data) { state = data; render(); } })\n      .catch(function (error) {\n        $('iot-source').textContent = '⚠️ Mất kết nối API: ' + error.message;\n      });\n  }\n\n  refresh();\n  var timer = setInterval(refresh, 3000);\n  window.addEventListener('beforeunload', function () { clearInterval(timer); });\n})();\n</script>\n",
+    "storeOutMessages": true,
+    "fwdInMessages": true,
+    "resendOnRefresh": false,
+    "templateScope": "local",
+    "className": "",
+    "x": 180,
+    "y": 160,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "template-control",
+    "type": "ui_template",
+    "z": "bai3-tab",
+    "group": "ui-group-control",
+    "name": "Điều khiển + quản lý người dùng",
+    "order": 1,
+    "width": 12,
+    "height": 0,
+    "format": "<div class=\"iot-control\" id=\"iot-control\">\n  <div class=\"iot-userbar\">\n    <strong id=\"iot-user-name\">Đang xác thực phiên...</strong>\n    <span class=\"iot-pill\" data-tone=\"role\" id=\"iot-user-role\">--</span>\n    <span class=\"iot-spacer\"></span>\n    <button class=\"iot-btn\" data-variant=\"ghost\" id=\"iot-logout\" type=\"button\">Đăng xuất</button>\n  </div>\n\n  <div class=\"iot-lock\" id=\"iot-lock\" hidden>\n    <span style=\"font-size:20px;line-height:1\">🔒</span>\n    <span>\n      <strong id=\"iot-lock-title\">Chế độ chỉ xem</strong>\n      <span id=\"iot-lock-text\">Tài khoản của bạn không có quyền điều khiển thiết bị.</span>\n    </span>\n  </div>\n\n  <div class=\"iot-actions\" id=\"iot-actions\">\n    <button class=\"iot-btn\" data-variant=\"primary\" data-action=\"ON\" type=\"button\">🟡 Bật đèn</button>\n    <button class=\"iot-btn\" data-action=\"OFF\" type=\"button\">⚫ Tắt đèn</button>\n    <button class=\"iot-btn\" data-variant=\"warning\" data-action=\"TOGGLE\" type=\"button\">🔄 Đảo trạng thái</button>\n  </div>\n  <p class=\"iot-msg\" id=\"iot-control-msg\" role=\"status\"></p>\n\n  <section id=\"iot-admin\" hidden>\n    <h4 class=\"iot-section-title\">Quản lý người dùng</h4>\n    <table class=\"iot-table\">\n      <thead><tr><th>Tài khoản</th><th>Vai trò</th><th>Quyền chính</th></tr></thead>\n      <tbody id=\"iot-users\"></tbody>\n    </table>\n    <p class=\"iot-note\" id=\"iot-users-note\"></p>\n  </section>\n  <section id=\"iot-admin-only\" hidden>\n    <p class=\"iot-note\">Danh sách tài khoản chỉ hiển thị với vai trò <code>admin</code> (quyền <code>users:read</code>).</p>\n  </section>\n</div>\n\n<script>\n(function () {\n  'use strict';\n  var ROLE_LABEL = { admin: 'Quản trị viên', viewer: 'Chỉ xem', gateway: 'Gateway' };\n  var session = null;\n\n  function $(id) { return document.getElementById(id); }\n\n  function setMessage(text, tone) {\n    var box = $('iot-control-msg');\n    box.textContent = text || '';\n    if (tone) { box.setAttribute('data-tone', tone); } else { box.removeAttribute('data-tone'); }\n  }\n\n  function has(permission) {\n    return Boolean(session && session.permissions && session.permissions.indexOf(permission) !== -1);\n  }\n\n  function setControlsEnabled(enabled) {\n    var buttons = document.querySelectorAll('#iot-actions .iot-btn');\n    for (var i = 0; i < buttons.length; i++) {\n      buttons[i].disabled = !enabled;\n      buttons[i].setAttribute('aria-disabled', String(!enabled));\n      buttons[i].title = enabled ? '' : 'Tài khoản chỉ xem: nút điều khiển đã bị vô hiệu hóa.';\n    }\n  }\n\n  function renderSession() {\n    if (!session) { return; }\n    $('iot-user-name').textContent = session.user.name + ' (' + session.user.username + ')';\n    $('iot-user-role').textContent = ROLE_LABEL[session.user.role] || session.user.role;\n\n    var canControl = has('device:control');\n    var lock = $('iot-lock');\n    if (canControl) {\n      lock.hidden = true;\n      setControlsEnabled(true);\n      setMessage('Tài khoản có quyền device:control: nút điều khiển đang hoạt động.', 'ok');\n    } else {\n      lock.hidden = false;\n      $('iot-lock-title').textContent = 'Chế độ chỉ xem (read-only)';\n      $('iot-lock-text').textContent = 'Vai trò \"' + (ROLE_LABEL[session.user.role] || session.user.role) +\n        '\" không có quyền device:control. Máy chủ sẽ trả về HTTP 403 nếu cố gửi lệnh.';\n      setControlsEnabled(false);\n      setMessage('Nút điều khiển đã bị vô hiệu hóa theo phân quyền.', '');\n    }\n\n    if (has('users:read')) {\n      $('iot-admin').hidden = false;\n      $('iot-admin-only').hidden = true;\n      loadUsers();\n    } else {\n      $('iot-admin').hidden = true;\n      $('iot-admin-only').hidden = false;\n    }\n  }\n\n  function loadUsers() {\n    fetch('/api/rbac/users', { credentials: 'same-origin', cache: 'no-store' })\n      .then(function (response) { return response.ok ? response.json() : Promise.reject(new Error('HTTP ' + response.status)); })\n      .then(function (data) {\n        var body = $('iot-users');\n        body.textContent = '';\n        data.users.forEach(function (user) {\n          var row = document.createElement('tr');\n          var nameCell = document.createElement('td');\n          nameCell.textContent = user.name + ' · ' + user.username;\n          var roleCell = document.createElement('td');\n          roleCell.textContent = ROLE_LABEL[user.role] || user.role;\n          var permCell = document.createElement('td');\n          var roleInfo = data.roles.filter(function (item) { return item.role === user.role; })[0];\n          permCell.textContent = roleInfo ? roleInfo.permissions.join(', ') : '--';\n          row.appendChild(nameCell);\n          row.appendChild(roleCell);\n          row.appendChild(permCell);\n          body.appendChild(row);\n        });\n        $('iot-users-note').textContent = 'Tài khoản được đọc từ users.json; mật khẩu chỉ lưu dạng hash scrypt.';\n      })\n      .catch(function (error) {\n        $('iot-users-note').textContent = 'Không tải được danh sách: ' + error.message;\n      });\n  }\n\n  function sendCommand(action) {\n    if (!session || !has('device:control')) {\n      setMessage('Bị chặn tại trình duyệt: tài khoản không có quyền device:control.', 'error');\n      return;\n    }\n    setControlsEnabled(false);\n    fetch('/api/device/control', {\n      method: 'POST',\n      credentials: 'same-origin',\n      headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'fetch' },\n      body: JSON.stringify({ action: action })\n    })\n      .then(function (response) {\n        return response.json().catch(function () { return {}; }).then(function (data) {\n          if (!response.ok) {\n            throw new Error((data.message || 'Lệnh bị từ chối') + ' (HTTP ' + response.status + ')');\n          }\n          return data;\n        });\n      })\n      .then(function (data) { setMessage('Đã gửi ' + action + '. Trạng thái đèn: ' + data.lamp + '.', 'ok'); })\n      .catch(function (error) { setMessage(error.message, 'error'); })\n      .then(function () { setControlsEnabled(has('device:control')); });\n  }\n\n  document.querySelectorAll('#iot-actions .iot-btn').forEach(function (button) {\n    button.addEventListener('click', function () { sendCommand(button.getAttribute('data-action')); });\n  });\n\n  $('iot-logout').addEventListener('click', function () {\n    fetch('/api/rbac/logout', { method: 'POST', credentials: 'same-origin' }).then(function () {\n      window.location.replace('/login');\n    });\n  });\n\n  fetch('/api/rbac/me', { credentials: 'same-origin', cache: 'no-store' })\n    .then(function (response) {\n      if (response.status === 401) { window.location.replace('/login?next=' + encodeURIComponent('/ui')); return null; }\n      if (!response.ok) { throw new Error('HTTP ' + response.status); }\n      return response.json();\n    })\n    .then(function (data) { if (data) { session = data; renderSession(); } })\n    .catch(function (error) {\n      setMessage('Không xác thực được phiên: ' + error.message, 'error');\n      setControlsEnabled(false);\n    });\n})();\n</script>\n",
+    "storeOutMessages": true,
+    "fwdInMessages": true,
+    "resendOnRefresh": false,
+    "templateScope": "local",
+    "className": "",
+    "x": 180,
+    "y": 240,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "broker-hivemq",
+    "type": "mqtt-broker",
+    "name": "HiveMQ public",
+    "broker": "broker.hivemq.com",
+    "port": "1883",
+    "clientid": "",
+    "autoConnect": true,
+    "usetls": false,
+    "protocolVersion": "4",
+    "keepalive": "60",
+    "cleansession": true,
+    "birthTopic": "",
+    "birthQos": "0",
+    "birthPayload": "",
+    "closeTopic": "",
+    "closeQos": "0",
+    "closePayload": "",
+    "willTopic": "",
+    "willQos": "0",
+    "willPayload": ""
+  },
+  {
+    "id": "queue-inject",
+    "type": "inject",
+    "z": "bai3-tab",
+    "name": "Mỗi giây",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "1",
+    "crontab": "",
+    "once": true,
+    "onceDelay": "0.5",
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "x": 140,
+    "y": 360,
+    "wires": [
+      [
+        "queue-function"
+      ]
+    ]
+  },
+  {
+    "id": "queue-function",
+    "type": "function",
+    "z": "bai3-tab",
+    "name": "Hàng đợi lệnh MQTT",
+    "func": "'use strict';\nvar rbac = global.get('rbac');\nif (!rbac || typeof rbac.drainCommands !== 'function') { return null; }\nvar commands = rbac.drainCommands(10);\nif (!commands.length) { return null; }\nnode.log('[rbac] publish ' + commands.length + ' lenh len MQTT');\nreturn commands.map(function (command) {\n    return { topic: command.topic, payload: command.payload, qos: 0, retain: false };\n});",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 380,
+    "y": 360,
+    "wires": [
+      [
+        "mqtt-out-control"
+      ]
+    ]
+  },
+  {
+    "id": "mqtt-out-control",
+    "type": "mqtt out",
+    "z": "bai3-tab",
+    "name": "Gửi lệnh điều khiển",
+    "topic": "",
+    "qos": "0",
+    "retain": "false",
+    "broker": "broker-hivemq",
+    "x": 640,
+    "y": 360,
+    "wires": []
+  }
+]

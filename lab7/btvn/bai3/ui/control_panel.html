@@ -1,0 +1,168 @@
+<div class="iot-control" id="iot-control">
+  <div class="iot-userbar">
+    <strong id="iot-user-name">Đang xác thực phiên...</strong>
+    <span class="iot-pill" data-tone="role" id="iot-user-role">--</span>
+    <span class="iot-spacer"></span>
+    <button class="iot-btn" data-variant="ghost" id="iot-logout" type="button">Đăng xuất</button>
+  </div>
+
+  <div class="iot-lock" id="iot-lock" hidden>
+    <span style="font-size:20px;line-height:1">🔒</span>
+    <span>
+      <strong id="iot-lock-title">Chế độ chỉ xem</strong>
+      <span id="iot-lock-text">Tài khoản của bạn không có quyền điều khiển thiết bị.</span>
+    </span>
+  </div>
+
+  <div class="iot-actions" id="iot-actions">
+    <button class="iot-btn" data-variant="primary" data-action="ON" type="button">🟡 Bật đèn</button>
+    <button class="iot-btn" data-action="OFF" type="button">⚫ Tắt đèn</button>
+    <button class="iot-btn" data-variant="warning" data-action="TOGGLE" type="button">🔄 Đảo trạng thái</button>
+  </div>
+  <p class="iot-msg" id="iot-control-msg" role="status"></p>
+
+  <section id="iot-admin" hidden>
+    <h4 class="iot-section-title">Quản lý người dùng</h4>
+    <table class="iot-table">
+      <thead><tr><th>Tài khoản</th><th>Vai trò</th><th>Quyền chính</th></tr></thead>
+      <tbody id="iot-users"></tbody>
+    </table>
+    <p class="iot-note" id="iot-users-note"></p>
+  </section>
+  <section id="iot-admin-only" hidden>
+    <p class="iot-note">Danh sách tài khoản chỉ hiển thị với vai trò <code>admin</code> (quyền <code>users:read</code>).</p>
+  </section>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var ROLE_LABEL = { admin: 'Quản trị viên', viewer: 'Chỉ xem', gateway: 'Gateway' };
+  var session = null;
+
+  function $(id) { return document.getElementById(id); }
+
+  function setMessage(text, tone) {
+    var box = $('iot-control-msg');
+    box.textContent = text || '';
+    if (tone) { box.setAttribute('data-tone', tone); } else { box.removeAttribute('data-tone'); }
+  }
+
+  function has(permission) {
+    return Boolean(session && session.permissions && session.permissions.indexOf(permission) !== -1);
+  }
+
+  function setControlsEnabled(enabled) {
+    var buttons = document.querySelectorAll('#iot-actions .iot-btn');
+    for (var i = 0; i < buttons.length; i++) {
+      buttons[i].disabled = !enabled;
+      buttons[i].setAttribute('aria-disabled', String(!enabled));
+      buttons[i].title = enabled ? '' : 'Tài khoản chỉ xem: nút điều khiển đã bị vô hiệu hóa.';
+    }
+  }
+
+  function renderSession() {
+    if (!session) { return; }
+    $('iot-user-name').textContent = session.user.name + ' (' + session.user.username + ')';
+    $('iot-user-role').textContent = ROLE_LABEL[session.user.role] || session.user.role;
+
+    var canControl = has('device:control');
+    var lock = $('iot-lock');
+    if (canControl) {
+      lock.hidden = true;
+      setControlsEnabled(true);
+      setMessage('Tài khoản có quyền device:control: nút điều khiển đang hoạt động.', 'ok');
+    } else {
+      lock.hidden = false;
+      $('iot-lock-title').textContent = 'Chế độ chỉ xem (read-only)';
+      $('iot-lock-text').textContent = 'Vai trò "' + (ROLE_LABEL[session.user.role] || session.user.role) +
+        '" không có quyền device:control. Máy chủ sẽ trả về HTTP 403 nếu cố gửi lệnh.';
+      setControlsEnabled(false);
+      setMessage('Nút điều khiển đã bị vô hiệu hóa theo phân quyền.', '');
+    }
+
+    if (has('users:read')) {
+      $('iot-admin').hidden = false;
+      $('iot-admin-only').hidden = true;
+      loadUsers();
+    } else {
+      $('iot-admin').hidden = true;
+      $('iot-admin-only').hidden = false;
+    }
+  }
+
+  function loadUsers() {
+    fetch('/api/rbac/users', { credentials: 'same-origin', cache: 'no-store' })
+      .then(function (response) { return response.ok ? response.json() : Promise.reject(new Error('HTTP ' + response.status)); })
+      .then(function (data) {
+        var body = $('iot-users');
+        body.textContent = '';
+        data.users.forEach(function (user) {
+          var row = document.createElement('tr');
+          var nameCell = document.createElement('td');
+          nameCell.textContent = user.name + ' · ' + user.username;
+          var roleCell = document.createElement('td');
+          roleCell.textContent = ROLE_LABEL[user.role] || user.role;
+          var permCell = document.createElement('td');
+          var roleInfo = data.roles.filter(function (item) { return item.role === user.role; })[0];
+          permCell.textContent = roleInfo ? roleInfo.permissions.join(', ') : '--';
+          row.appendChild(nameCell);
+          row.appendChild(roleCell);
+          row.appendChild(permCell);
+          body.appendChild(row);
+        });
+        $('iot-users-note').textContent = 'Tài khoản được đọc từ users.json; mật khẩu chỉ lưu dạng hash scrypt.';
+      })
+      .catch(function (error) {
+        $('iot-users-note').textContent = 'Không tải được danh sách: ' + error.message;
+      });
+  }
+
+  function sendCommand(action) {
+    if (!session || !has('device:control')) {
+      setMessage('Bị chặn tại trình duyệt: tài khoản không có quyền device:control.', 'error');
+      return;
+    }
+    setControlsEnabled(false);
+    fetch('/api/device/control', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'fetch' },
+      body: JSON.stringify({ action: action })
+    })
+      .then(function (response) {
+        return response.json().catch(function () { return {}; }).then(function (data) {
+          if (!response.ok) {
+            throw new Error((data.message || 'Lệnh bị từ chối') + ' (HTTP ' + response.status + ')');
+          }
+          return data;
+        });
+      })
+      .then(function (data) { setMessage('Đã gửi ' + action + '. Trạng thái đèn: ' + data.lamp + '.', 'ok'); })
+      .catch(function (error) { setMessage(error.message, 'error'); })
+      .then(function () { setControlsEnabled(has('device:control')); });
+  }
+
+  document.querySelectorAll('#iot-actions .iot-btn').forEach(function (button) {
+    button.addEventListener('click', function () { sendCommand(button.getAttribute('data-action')); });
+  });
+
+  $('iot-logout').addEventListener('click', function () {
+    fetch('/api/rbac/logout', { method: 'POST', credentials: 'same-origin' }).then(function () {
+      window.location.replace('/login');
+    });
+  });
+
+  fetch('/api/rbac/me', { credentials: 'same-origin', cache: 'no-store' })
+    .then(function (response) {
+      if (response.status === 401) { window.location.replace('/login?next=' + encodeURIComponent('/ui')); return null; }
+      if (!response.ok) { throw new Error('HTTP ' + response.status); }
+      return response.json();
+    })
+    .then(function (data) { if (data) { session = data; renderSession(); } })
+    .catch(function (error) {
+      setMessage('Không xác thực được phiên: ' + error.message, 'error');
+      setControlsEnabled(false);
+    });
+})();
+</script>

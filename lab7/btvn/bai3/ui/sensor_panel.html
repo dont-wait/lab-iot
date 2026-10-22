@@ -1,0 +1,149 @@
+<div class="iot-sensor" id="iot-sensor">
+  <div class="iot-grid">
+    <article class="iot-card">
+      <header><span>🌡️ Nhiệt độ</span><span class="iot-pill" id="iot-temp-trend">--</span></header>
+      <div class="iot-value"><span id="iot-temp">--</span><small>°C</small></div>
+    </article>
+    <article class="iot-card">
+      <header><span>💧 Độ ẩm</span><span class="iot-pill" id="iot-hum-trend">--</span></header>
+      <div class="iot-value"><span id="iot-hum">--</span><small>%</small></div>
+    </article>
+    <article class="iot-card">
+      <header><span>💡 Đèn phòng khách</span><span class="iot-pill" id="iot-lamp-pill" data-tone="off">--</span></header>
+      <div class="iot-value" style="font-size:22px" id="iot-lamp-text">Đang chờ dữ liệu</div>
+    </article>
+  </div>
+
+  <div class="iot-chart-wrap">
+    <div class="iot-chart-head">
+      <span class="iot-legend"><i class="iot-dot" style="background:#f97316"></i> Nhiệt độ (°C)</span>
+      <span class="iot-legend"><i class="iot-dot" style="background:#06b6d4"></i> Độ ẩm (%)</span>
+      <span class="iot-spacer" style="flex:1"></span>
+      <span id="iot-range">180 điểm gần nhất</span>
+    </div>
+    <canvas id="iot-chart" width="1200" height="260"></canvas>
+  </div>
+
+  <div class="iot-meta">
+    <span>📟 Thiết bị: <strong id="iot-device">--</strong></span>
+    <span>🕒 Cập nhật: <strong id="iot-updated">--</strong></span>
+    <span id="iot-source"></span>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var TEMP_COLOR = '#f97316';
+  var HUM_COLOR = '#06b6d4';
+  var state = { history: { temperature: [], humidity: [] } };
+
+  function $(id) { return document.getElementById(id); }
+
+  function fmt(value, digits) {
+    if (value === null || value === undefined || Number.isNaN(value)) { return '--'; }
+    return Number(value).toFixed(digits === undefined ? 1 : digits);
+  }
+
+  function trend(series) {
+    if (!series || series.length < 2) { return '--'; }
+    var delta = series[series.length - 1].v - series[series.length - 2].v;
+    return (delta >= 0 ? '▲ +' : '▼ ') + delta.toFixed(1);
+  }
+
+  function drawChart() {
+    var canvas = $('iot-chart');
+    if (!canvas) { return; }
+    var ctx = canvas.getContext('2d');
+    var width = canvas.width;
+    var height = canvas.height;
+    var pad = 10;
+    ctx.clearRect(0, 0, width, height);
+
+    var styles = getComputedStyle(document.documentElement);
+    var grid = styles.getPropertyValue('--iot-border').trim() || '#dbe3ee';
+    var muted = styles.getPropertyValue('--iot-muted').trim() || '#64748b';
+
+    ctx.strokeStyle = grid;
+    ctx.lineWidth = 1;
+    ctx.globalAlpha = 0.7;
+    for (var row = 1; row <= 3; row++) {
+      var y = pad + ((height - 2 * pad) * row) / 4;
+      ctx.beginPath();
+      ctx.moveTo(pad, y);
+      ctx.lineTo(width - pad, y);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+
+    var series = [
+      { points: state.history.temperature || [], min: 0, max: 50, color: TEMP_COLOR },
+      { points: state.history.humidity || [], min: 0, max: 100, color: HUM_COLOR }
+    ];
+    var maxLength = Math.max(series[0].points.length, series[1].points.length);
+    if (maxLength === 0) {
+      ctx.fillStyle = muted;
+      ctx.font = '16px system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Đang chờ dữ liệu cảm biến...', width / 2, height / 2);
+      return;
+    }
+
+    series.forEach(function (item) {
+      var points = item.points;
+      if (points.length === 0) { return; }
+      ctx.beginPath();
+      ctx.strokeStyle = item.color;
+      ctx.lineWidth = 3;
+      ctx.lineJoin = 'round';
+      var step = points.length > 1 ? (width - 2 * pad) / (points.length - 1) : 0;
+      points.forEach(function (point, index) {
+        var x = pad + step * index;
+        var ratio = Math.min(1, Math.max(0, (point.v - item.min) / (item.max - item.min)));
+        var y = height - pad - ratio * (height - 2 * pad);
+        if (index === 0) { ctx.moveTo(x, y); } else { ctx.lineTo(x, y); }
+      });
+      ctx.stroke();
+    });
+  }
+
+  function render() {
+    var lastTemp = state.history.temperature[state.history.temperature.length - 1];
+    var lastHum = state.history.humidity[state.history.humidity.length - 1];
+    $('iot-temp').textContent = lastTemp ? fmt(lastTemp.v) : '--';
+    $('iot-hum').textContent = lastHum ? fmt(lastHum.v) : '--';
+    $('iot-temp-trend').textContent = trend(state.history.temperature);
+    $('iot-hum-trend').textContent = trend(state.history.humidity);
+
+    var lampOn = state.state && state.state.lamp === 'ON';
+    var pill = $('iot-lamp-pill');
+    pill.textContent = lampOn ? '● Đang bật' : '○ Đang tắt';
+    pill.setAttribute('data-tone', lampOn ? 'on' : 'off');
+    $('iot-lamp-text').textContent = lampOn ? 'Đang bật' : 'Đang tắt';
+    $('iot-lamp-text').style.color = lampOn ? 'var(--iot-ok)' : 'var(--iot-muted)';
+    $('iot-device').textContent = (state.state && state.state.deviceId) || '--';
+    $('iot-updated').textContent = state.state && state.state.updatedAt
+      ? new Date(state.state.updatedAt).toLocaleString('vi-VN')
+      : '--';
+    $('iot-range').textContent = Math.max(state.history.temperature.length, state.history.humidity.length) + ' điểm gần nhất';
+    drawChart();
+  }
+
+  function refresh() {
+    fetch('/api/state', { credentials: 'same-origin', cache: 'no-store' })
+      .then(function (response) {
+        if (response.status === 401) { window.location.replace('/login?next=' + encodeURIComponent('/ui')); return null; }
+        if (!response.ok) { throw new Error('HTTP ' + response.status); }
+        return response.json();
+      })
+      .then(function (data) { if (data) { state = data; render(); } })
+      .catch(function (error) {
+        $('iot-source').textContent = '⚠️ Mất kết nối API: ' + error.message;
+      });
+  }
+
+  refresh();
+  var timer = setInterval(refresh, 3000);
+  window.addEventListener('beforeunload', function () { clearInterval(timer); });
+})();
+</script>

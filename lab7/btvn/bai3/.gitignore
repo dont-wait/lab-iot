@@ -1,0 +1,5 @@
+node_modules/
+.rbac-secret
+.node-red/
+evidence/audit.jsonl
+npm-debug.log*

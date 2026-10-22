@@ -1,0 +1,90 @@
+========================================================================
+KIEM THU PHAN QUYEN DASHBOARD - LAB 7 BAI 3
+Thoi diem: 2026-10-22T14:44:54.370Z
+========================================================================
+
+[1] Truy cap khi chua dang nhap
+PASS  /ui -> 302 ve trang dang nhap — status=302 location=/login?next=%2Fui
+PASS  GET /api/state -> 401 — status=401
+PASS  POST /api/device/control -> 401 — status=401
+PASS  Khong co lenh nao duoc phat khi chua dang nhap — commands=0
+
+[2] Dang nhap sai va chong do mat khau
+PASS  Sai mat khau -> 401 — status=401
+PASS  Sai Content-Type -> 415 — status=415
+PASS  Sai 5 lan lien tiep -> 429 (rate limit) — status=429
+PASS  Co header Retry-After — retry-after=60
+
+[3] Tai khoan viewer (read-only)
+PASS  viewer dang nhap -> 200 — status=200
+PASS  cookie co HttpOnly
+PASS  cookie co SameSite=Strict
+PASS  role tra ve la viewer — {"username":"viewer","name":"Người xem (Read-only)","role":"viewer","createdAt":"2026-10-22T00:00:00.000Z"}
+PASS  permissions viewer khong co device:control — ["device:view","dashboard:view"]
+PASS  cookie viewer duoc tao
+PASS  viewer xem duoc thong so -> 200 — status=200
+PASS  API tra ve nhiet do/do am/den — {"deviceId":"ESP32_LIVING_ROOM","temperature":null,"humidity":null,"lamp":"OFF","updatedAt":null}
+PASS  GET /api/rbac/me -> 200 voi viewer — status=200
+PASS  viewer mo duoc /ui -> 200 — status=200
+PASS  viewer bam nut dieu khien -> 403 — status=403
+PASS  403 co requiredPermission=device:control — {"error":"forbidden","message":"Tai khoan cua ban chi duoc xem, khong duoc dieu khien thiet bi.","requiredPermission":"device:control","role":"viewer"}
+PASS  Khong co lenh nao duoc phat boi viewer — commands=0
+PASS  Trang thai den khong doi
+PASS  viewer khong doc duoc danh sach tai khoan -> 403 — status=403
+PASS  viewer khong duoc ghi du lieu cam bien -> 403 — status=403
+
+[4] Tai khoan admin
+PASS  admin dang nhap -> 200 — status=200
+PASS  admin co quyen device:control
+PASS  admin co quyen users:read
+PASS  admin doc duoc danh sach tai khoan -> 200 — status=200
+PASS  Danh sach co admin + viewer, khong lo password_hash — users=admin,viewer,gateway
+PASS  admin bat den -> 200 — status=200
+PASS  Trang thai den = ON — {"commandId":"daa298c3-65ab-4794-926d-a6dd3642d2a1","lamp":"ON","previousLamp":"OFF","updatedAt":"2026-10-22T14:44:54.643Z"}
+PASS  Lenh MQTT duoc phat dung topic/payload — {"id":"daa298c3-65ab-4794-926d-a6dd3642d2a1","ts":"2026-10-22T14:44:54.644Z","action":"ON","lamp":"ON","previousLamp":"OFF","topic":"home/living_room/control","payload":"{\"command\":\"ON\"}","user":{"username":"admin","role":"admin","createdAt":null},"role":"admin","at":"2026-10-22T14:44:54.643Z"}
+PASS  Lenh ghi nhan nguoi gui la admin
+PASS  admin dao trang thai -> OFF — {"commandId":"0f29f5cb-d2c8-4a52-abfa-801c83d91bf0","lamp":"OFF","previousLamp":"ON","updatedAt":"2026-10-22T14:44:54.646Z"}
+PASS  action khong hop le -> 400 — status=400
+PASS  admin doc duoc audit log -> 200
+PASS  Audit co ghi lan dang nhap cua viewer
+PASS  Audit co ghi lan bi tu choi 403 cua viewer
+PASS  Audit co ghi lenh dieu khien cua admin
+
+[5] Gia mao cookie / phien
+PASS  Cookie bi sua chu ky -> 401 — status=401
+PASS  Cookie gia mao hoan toan -> 401 — status=401
+PASS  Logout -> 204 va xoa cookie — status=204
+PASS  Sau logout, cookie cu khong con hieu luc -> 401 — status=401
+
+[6] Kiem tra Dashboard template the hien dung phan quyen
+PASS  Template an nut khi thieu device:control
+PASS  Nut bi disable o phia trinh duyet
+PASS  Template hien khoa read-only
+PASS  Moi lan bam nut deu goi API co kiem tra quyen
+PASS  Template an bang quan ly nguoi dung voi viewer
+PASS  flows.json co dashboard template va MQTT command queue
+PASS  server.js gan rbac.middleware truoc router cua Node-RED
+PASS  settings.js cung cap rbac trong functionGlobalContext
+PASS  users.json khong chua mat khau ro
+
+========================================================================
+KET QUA: 52 PASS, 0 FAIL
+========================================================================
+Tat ca kiem tra deu dat: viewer dang nhap duoc nhung moi thao tac
+dieu khien deu bi tu choi (403) o ca giao dien lan may chu.
+
+Audit log trong bo nho (14 su kien):
+  2026-10-22T14:44:54.499Z | login           | viewer   | - | allowed=false | invalid_credentials
+  2026-10-22T14:44:54.503Z | login           | khong-ton-tai | - | allowed=false | invalid_credentials
+  2026-10-22T14:44:54.505Z | login           | khong-ton-tai | - | allowed=false | invalid_credentials
+  2026-10-22T14:44:54.507Z | login           | khong-ton-tai | - | allowed=false | invalid_credentials
+  2026-10-22T14:44:54.509Z | login           | khong-ton-tai | - | allowed=false | invalid_credentials
+  2026-10-22T14:44:54.511Z | login           | khong-ton-tai | - | allowed=false | invalid_credentials
+  2026-10-22T14:44:54.564Z | login           | viewer   | viewer | allowed=true
+  2026-10-22T14:44:54.575Z | access_denied   | viewer   | viewer | allowed=false
+  2026-10-22T14:44:54.581Z | access_denied   | viewer   | viewer | allowed=false
+  2026-10-22T14:44:54.584Z | access_denied   | viewer   | viewer | allowed=false
+  2026-10-22T14:44:54.638Z | login           | admin    | admin | allowed=true
+  2026-10-22T14:44:54.644Z | device_control  | admin    | admin | allowed=true
+  2026-10-22T14:44:54.646Z | device_control  | admin    | admin | allowed=true
+  2026-10-22T14:44:54.654Z | logout          | viewer   | viewer | allowed=true

@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "note": "Mat khau chi luu duoi dang hash scrypt. Mat khau demo duoc ghi trong README.md.",
+  "users": [
+    {
+      "username": "admin",
+      "name": "Quản trị viên",
+      "role": "admin",
+      "created_at": "2026-10-22T00:00:00.000Z",
+      "password_hash": "scrypt$16384$8$1$U6Gtn6oHjqKLsaM2R_OpKA$5yE-X2lr0Y_c3WCcGsPpkVC4w7e08ORcctVi4ZqZHn7Bsirz54l9ajVvtQXdZAuB4x6IQkj0XQA6xTiCKBc4rg"
+    },
+    {
+      "username": "viewer",
+      "name": "Người xem (Read-only)",
+      "role": "viewer",
+      "created_at": "2026-10-22T00:00:00.000Z",
+      "password_hash": "scrypt$16384$8$1$oyBYAUtDtFak6DPkTX-8jQ$7L6C9CsVUjSDoiV8bAdXfgEpJRvs1ullioyndo07PKHcJVAfIODXvX7KMw4cR-LLc2S6-zfOmdDhYqMkdzzwkA"
+    },
+    {
+      "username": "gateway",
+      "name": "Gateway cảm biến",
+      "role": "gateway",
+      "created_at": "2026-10-22T00:00:00.000Z",
+      "password_hash": "scrypt$16384$8$1$JXbHzlqXuBGocfJY20S27A$Tv4Pm8anV-i0FuJ0ckpyEZ0hXt8KY3M16XSfWj1lsB4jh26vr_atK0hIvB4sWP_LM8igD6Ox6npF4JlE7alsbA"
+    }
+  ]
+}

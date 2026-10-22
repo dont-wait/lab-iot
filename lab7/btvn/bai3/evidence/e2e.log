@@ -1,0 +1,43 @@
+========================================================================
+E2E DASHBOARD PHAN QUYEN - LAB 7 BAI 3
+Thoi diem: 2026-10-22T14:44:55.165Z
+========================================================================
+
+[1] Dang nhap tai khoan phu "viewer" va render Dashboard
+PASS  viewer dang nhap thanh cong -> 200 — status=200
+PASS  cookie phien viewer duoc tao
+PASS  viewer mo duoc /ui -> 200 — status=200
+PASS  Dashboard doc duoc phien viewer qua /api/rbac/me
+PASS  Vai tro hien thi la "Chi xem" — role=Chỉ xem
+PASS  Ca 3 nut dieu khien deu bi disabled — disabled=[true,true,true]
+PASS  Khoa "Che do chi xem" duoc hien ra
+PASS  Tieu de khoa la read-only — Chế độ chỉ xem (read-only)
+PASS  Bang quan ly nguoi dung bi an voi viewer
+PASS  Bam nut khi bi disabled khong gui lenh nao — requests=0
+PASS  Goi thang API dieu khien bang viewer -> 403 — status=403
+PASS  403 neu ro requiredPermission=device:control — {"error":"forbidden","message":"Tai khoan cua ban chi duoc xem, khong duoc dieu khien thiet bi.","requiredPermission":"device:control","role":"viewer"}
+PASS  Viewer van xem duoc thong so cam bien — {"deviceId":"ESP32_LIVING_ROOM","temperature":null,"humidity":null,"lamp":"OFF","updatedAt":null}
+PASS  Trang thai den khong bi viewer thay doi — lamp=OFF
+
+[2] Dang nhap "admin" va doi chieu
+PASS  admin dang nhap thanh cong -> 200 — status=200
+PASS  Dashboard render duoc phien admin
+PASS  Vai tro hien thi la "Quan tri vien" — role=Quản trị viên
+PASS  Nut dieu khien bat voi admin — disabled=[false,false,false]
+PASS  Khoa read-only an voi admin
+PASS  Bang quan ly nguoi dung hien va co du lieu — rows=3
+PASS  Danh sach khong lo password hash
+PASS  admin dieu khien duoc -> 200 — status=200
+PASS  Trang thai den = ON — {"commandId":"e6f39b29-4c87-4d4e-b12e-10484adf90c1","lamp":"ON","previousLamp":"OFF","updatedAt":"2026-10-22T14:44:55.676Z"}
+PASS  Admin doc lai thay den ON — lamp=ON
+PASS  Audit ghi nhan viewer bi tu choi 403
+PASS  Audit ghi nhan admin dieu khien thanh cong
+
+========================================================================
+KET QUA E2E: 26 PASS, 0 FAIL
+========================================================================
+Viewer dang nhap va xem duoc Dashboard nhung khong the dieu khien:
+- Nut bi disabled ngay tren trinh duyet.
+- Goi thang API van bi may chu tu choi 403.
+- Admin van dieu khien binh thuong.
+Audit entries: 4
