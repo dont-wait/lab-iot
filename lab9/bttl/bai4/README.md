@@ -3,14 +3,14 @@
 ## Luồng
 
 ```
-Check Temperature > 35 ─[True]─► Add Temp To Metadata ─► Create Alarm High Temp ─[Created/Updated]─► To Email ─► Send Email
+Check Temperature > 35 ─[True]─► Add Temp To Metadata ─► Create Alarm HighTemperatureAlert ─[Created/Updated]─► To Email ─► Send Email
                         └[False]─► Log NORMAL
 ```
 
 | Node | Vai trò |
 |---|---|
 | Add Temp To Metadata (Transform) | Chép `msg.temperature` vào metadata, vì sau node Create Alarm thì `msg` biến thành dữ liệu alarm |
-| Create Alarm High Temp | Tạo alarm `High Temperature`, mức CRITICAL |
+| Create Alarm HighTemperatureAlert | Tạo alarm `HighTemperatureAlert`, mức CRITICAL |
 | To Email | Soạn nội dung email từ template |
 | Send Email | Gửi qua SMTP |
 
