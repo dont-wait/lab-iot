@@ -1,0 +1,155 @@
+{
+  "info": {
+    "_postman_id": "lab9-btvn-bai3-clear-alarm",
+    "name": "Lab 9 - Bài 3: Auto Recovery & Clear Alarm Testing",
+    "description": "Bộ sưu tập Postman kiểm thử chu trình Create Alarm khi quá nhiệt (>= 40°C), duy trì khi giảm nhẹ, và tự động Clear Alarm khi nhiệt độ hạ an toàn (< 28°C) kèm gửi email xác nhận ổn định.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "tb_host",
+      "value": "localhost",
+      "type": "string"
+    },
+    {
+      "key": "tb_port",
+      "value": "8080",
+      "type": "string"
+    },
+    {
+      "key": "device_token",
+      "value": "YOUR_DEVICE_ACCESS_TOKEN",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Pha 1: Trạng thái bình thường (25.0°C)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"temperature\": 25.0,\n  \"humidity\": 60.0\n}"
+        },
+        "url": {
+          "raw": "http://{{tb_host}}:{{tb_port}}/api/v1/{{device_token}}/telemetry",
+          "protocol": "http",
+          "host": [
+            "{{tb_host}}"
+          ],
+          "port": "{{tb_port}}",
+          "path": [
+            "api",
+            "v1",
+            "{{device_token}}",
+            "telemetry"
+          ]
+        },
+        "description": "Nhiệt độ ban đầu bình thường. Lưu telemetry vào CSDL, không có alarm nào được tạo."
+      },
+      "response": []
+    },
+    {
+      "name": "Pha 2: Quá nhiệt (41.5°C) -> CREATE ALARM & EMAIL BÁO ĐỘNG",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"temperature\": 41.5,\n  \"humidity\": 42.0\n}"
+        },
+        "url": {
+          "raw": "http://{{tb_host}}:{{tb_port}}/api/v1/{{device_token}}/telemetry",
+          "protocol": "http",
+          "host": [
+            "{{tb_host}}"
+          ],
+          "port": "{{tb_port}}",
+          "path": [
+            "api",
+            "v1",
+            "{{device_token}}",
+            "telemetry"
+          ]
+        },
+        "description": "Nhiệt độ vượt ngưỡng >= 40°C. Kích hoạt Create Alarm (CRITICAL) và gửi email cảnh báo khẩn cấp."
+      },
+      "response": []
+    },
+    {
+      "name": "Pha 3: Giảm nhiệt độ đệm Hysteresis (32.0°C) -> ALARM VẪN ACTIVE",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"temperature\": 32.0,\n  \"humidity\": 50.0\n}"
+        },
+        "url": {
+          "raw": "http://{{tb_host}}:{{tb_port}}/api/v1/{{device_token}}/telemetry",
+          "protocol": "http",
+          "host": [
+            "{{tb_host}}"
+          ],
+          "port": "{{tb_port}}",
+          "path": [
+            "api",
+            "v1",
+            "{{device_token}}",
+            "telemetry"
+          ]
+        },
+        "description": "Nhiệt độ giảm xuống 32°C (thuộc vùng 28°C <= T < 40°C). Cơ chế chống chập chờn (Hysteresis) giữ nguyên trạng thái ACTIVE của Alarm, chưa xóa."
+      },
+      "response": []
+    },
+    {
+      "name": "Pha 4: Phục hồi an toàn (26.5°C < 28°C) -> CLEAR ALARM & EMAIL PHỤC HỒI",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"temperature\": 26.5,\n  \"humidity\": 58.0\n}"
+        },
+        "url": {
+          "raw": "http://{{tb_host}}:{{tb_port}}/api/v1/{{device_token}}/telemetry",
+          "protocol": "http",
+          "host": [
+            "{{tb_host}}"
+          ],
+          "port": "{{tb_port}}",
+          "path": [
+            "api",
+            "v1",
+            "{{device_token}}",
+            "telemetry"
+          ]
+        },
+        "description": "Nhiệt độ đã hạ xuống dưới 28°C. Kích hoạt node Clear Alarm -> Alarm chuyển trạng thái CLEARED_UNACK -> Kích hoạt relation 'Cleared' gửi email xác nhận 'Hệ thống đã trở lại trạng thái ổn định'."
+      },
+      "response": []
+    }
+  ]
+}

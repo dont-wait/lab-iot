@@ -103,6 +103,20 @@
 | [Bài 2](lab6/btvn/bai2) | Giải mã JSON MQTT để điều khiển độc lập đèn và quạt theo target/action hoặc speed. | ESP32, MQTT |
 | [Bài 3](lab6/btvn/bai3) | Nhận lệnh bật/tắt qua MQTT, cập nhật thiết bị và publish ACK trạng thái dạng JSON. | ESP32, MQTT |
 
+### Lab 9
+
+#### Bài thực hành trên lớp (`lab9/bttl`)
+
+| Bài | Nội dung | Nền tảng |
+|---|---|---|
+| [Bài 5](lab9/bttl/bai5) | Kiểm thử toàn diện chuỗi Rule Chain (End-to-End Testing): Bật Debug mode, gửi telemetry nhiệt độ bình thường đến đột biến 40°C, kiểm tra Alarms và Email cảnh báo. | ThingsBoard, Python |
+
+#### Bài tập về nhà (`lab9/btvn`)
+
+| Bài | Nội dung | Nền tảng |
+|---|---|---|
+| [Bài 3](lab9/btvn/bai3) | Xây dựng logic tự động phục hồi và xóa cảnh báo (Clear Alarm): Tự động Clear Alarm khi nhiệt độ an toàn < 28°C và gửi email xác nhận trạng thái ổn định với cơ chế Hysteresis chống chập chờn. | ThingsBoard, Python |
+
 ## Cấu trúc thư mục
 
 ```text
@@ -119,8 +133,11 @@
 ├── lab4/
 │   ├── bttl/       # HTTP POST với Python requests
 │   └── btvn/       # Gửi và nhận dữ liệu cảm biến qua HTTP
-└── lab6/
-    └── btvn/       # Trao đổi JSON qua MQTT
+├── lab6/
+│   └── btvn/       # Trao đổi JSON qua MQTT
+└── lab9/
+    ├── bttl/       # Kiểm thử toàn diện Rule Chain và Debug mode
+    └── btvn/       # Tự động phục hồi, Clear Alarm và gửi email xác nhận
 ```
 
 Mỗi thư mục bài thường gồm:

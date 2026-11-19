@@ -1,0 +1,160 @@
+{
+  "ruleChain": {
+    "name": "Lab 9 - Bài 5: End-to-End Testing & Temperature Alarm",
+    "type": "CORE",
+    "firstRuleNodeId": null,
+    "root": false,
+    "debugMode": true,
+    "configuration": null,
+    "additionalInfo": {
+      "description": "Rule chain kiểm thử toàn diện: nhận telemetry, lọc nhiệt độ >= 40°C, tạo alarm và gửi email cảnh báo với chế độ Debug mode kích hoạt trên toàn bộ các node."
+    }
+  },
+  "metadata": {
+    "firstNodeIndex": 0,
+    "nodes": [
+      {
+        "id": {
+          "entityType": "RULE_NODE",
+          "id": "71000000-0000-0000-0000-000000000001"
+        },
+        "type": "org.thingsboard.rule.engine.filter.TbMsgTypeSwitchNode",
+        "name": "1. Phân loại bản tin (Message Type Switch)",
+        "debugMode": true,
+        "configuration": {},
+        "additionalInfo": {
+          "layoutX": 150,
+          "layoutY": 250
+        }
+      },
+      {
+        "id": {
+          "entityType": "RULE_NODE",
+          "id": "71000000-0000-0000-0000-000000000002"
+        },
+        "type": "org.thingsboard.rule.engine.telemetry.TbMsgTimeseriesNode",
+        "name": "2. Lưu dữ liệu Telemetry (Save Timeseries)",
+        "debugMode": true,
+        "configuration": {
+          "defaultTTL": 0
+        },
+        "additionalInfo": {
+          "layoutX": 420,
+          "layoutY": 150
+        }
+      },
+      {
+        "id": {
+          "entityType": "RULE_NODE",
+          "id": "71000000-0000-0000-0000-000000000003"
+        },
+        "type": "org.thingsboard.rule.engine.filter.TbJsFilterNode",
+        "name": "3. Lọc nhiệt độ >= 40°C (Filter Script)",
+        "debugMode": true,
+        "configuration": {
+          "scriptLang": "JS",
+          "jsScript": "return typeof msg.temperature !== 'undefined' && msg.temperature >= 40;"
+        },
+        "additionalInfo": {
+          "layoutX": 420,
+          "layoutY": 350
+        }
+      },
+      {
+        "id": {
+          "entityType": "RULE_NODE",
+          "id": "71000000-0000-0000-0000-000000000004"
+        },
+        "type": "org.thingsboard.rule.engine.action.TbCreateAlarmNode",
+        "name": "4. Tạo cảnh báo (Create Alarm)",
+        "debugMode": true,
+        "configuration": {
+          "scriptLang": "JS",
+          "alarmType": "High Temperature Alarm",
+          "alarmDetailsBuildJs": "var details = {};\ndetails.temperature = msg.temperature;\ndetails.threshold = 40.0;\ndetails.message = 'Nhiệt độ vượt ngưỡng an toàn: ' + msg.temperature + '°C (>= 40°C)!';\nreturn details;",
+          "severity": "CRITICAL",
+          "propagate": false,
+          "useMessageAlarmData": false,
+          "overwriteAlarmDetails": false,
+          "relationTypes": []
+        },
+        "additionalInfo": {
+          "layoutX": 700,
+          "layoutY": 350
+        }
+      },
+      {
+        "id": {
+          "entityType": "RULE_NODE",
+          "id": "71000000-0000-0000-0000-000000000005"
+        },
+        "type": "org.thingsboard.rule.engine.mail.TbMsgToEmailNode",
+        "name": "5. Định dạng nội dung Email (To Email)",
+        "debugMode": true,
+        "configuration": {
+          "fromTemplate": "noreply@iot-lab.edu.vn",
+          "toTemplate": "admin@iot-lab.edu.vn",
+          "ccTemplate": null,
+          "bccTemplate": null,
+          "subjectTemplate": "[CẢNH BÁO KHẨN CẤP] Nhiệt độ vượt ngưỡng: ${temperature}°C - ${deviceName}",
+          "bodyTemplate": "<div style='font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ff4d4f; border-radius: 8px;'>\n  <h2 style='color: #cf1322;'>⚠️ HỆ THỐNG CẢNH BÁO IoT - THINGSBOARD</h2>\n  <p>Hệ thống giám sát phát hiện nhiệt độ vượt ngưỡng cho phép tại thiết bị: <b>${deviceName}</b></p>\n  <table style='width: 100%; border-collapse: collapse; margin-top: 15px;'>\n    <tr style='background-color: #fff1f0;'>\n      <td style='padding: 8px; border: 1px solid #ffa39e;'><b>Thông số</b></td>\n      <td style='padding: 8px; border: 1px solid #ffa39e;'><b>Giá trị ghi nhận</b></td>\n    </tr>\n    <tr>\n      <td style='padding: 8px; border: 1px solid #ffa39e;'>Nhiệt độ hiện tại</td>\n      <td style='padding: 8px; border: 1px solid #ffa39e; color: red; font-size: 16px;'><b>${temperature} °C</b></td>\n    </tr>\n    <tr>\n      <td style='padding: 8px; border: 1px solid #ffa39e;'>Ngưỡng kích hoạt</td>\n      <td style='padding: 8px; border: 1px solid #ffa39e;'>&gt;= 40.0 °C</td>\n    </tr>\n    <tr>\n      <td style='padding: 8px; border: 1px solid #ffa39e;'>Mức độ nghiêm trọng</td>\n      <td style='padding: 8px; border: 1px solid #ffa39e; color: red;'><b>CRITICAL</b></td>\n    </tr>\n    <tr>\n      <td style='padding: 8px; border: 1px solid #ffa39e;'>Thời điểm</td>\n      <td style='padding: 8px; border: 1px solid #ffa39e;'>${__msgTimestamp}</td>\n    </tr>\n  </table>\n  <p style='margin-top: 15px;'><i>Vui lòng đăng nhập ThingsBoard Dashboard và kiểm tra hiện trường ngay lập tức!</i></p>\n</div>",
+          "mailBodyType": "true"
+        },
+        "additionalInfo": {
+          "layoutX": 960,
+          "layoutY": 350
+        }
+      },
+      {
+        "id": {
+          "entityType": "RULE_NODE",
+          "id": "71000000-0000-0000-0000-000000000006"
+        },
+        "type": "org.thingsboard.rule.engine.mail.TbSendEmailNode",
+        "name": "6. Gửi Email qua SMTP (Send Email)",
+        "debugMode": true,
+        "configuration": {
+          "useSystemSmtpSettings": true,
+          "smtpHost": "smtp.gmail.com",
+          "smtpPort": 587,
+          "timeoutMs": 10000,
+          "enableTls": true,
+          "username": "",
+          "password": ""
+        },
+        "additionalInfo": {
+          "layoutX": 1200,
+          "layoutY": 350
+        }
+      }
+    ],
+    "connections": [
+      {
+        "fromIndex": 0,
+        "toIndex": 1,
+        "type": "Post telemetry"
+      },
+      {
+        "fromIndex": 0,
+        "toIndex": 2,
+        "type": "Post telemetry"
+      },
+      {
+        "fromIndex": 2,
+        "toIndex": 3,
+        "type": "True"
+      },
+      {
+        "fromIndex": 3,
+        "toIndex": 4,
+        "type": "Created"
+      },
+      {
+        "fromIndex": 4,
+        "toIndex": 5,
+        "type": "Success"
+      }
+    ],
+    "ruleChainConnections": null
+  }
+}
