@@ -1,0 +1,11 @@
+services:
+  node-red:
+    image: nodered/node-red:latest
+    container_name: node-red
+    ports:
+      - "127.0.0.1:1880:1880"
+    volumes:
+      - node_red_data:/data
+
+volumes:
+  node_red_data:
