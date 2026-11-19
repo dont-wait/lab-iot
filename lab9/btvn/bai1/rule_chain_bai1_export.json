@@ -1,0 +1,232 @@
+{
+  "ruleChain": {
+    "name": "Smart_Environment_Alert_BTVN_Bai1",
+    "type": "CORE",
+    "firstRuleNodeId": null,
+    "root": false,
+    "debugMode": true,
+    "configuration": null,
+    "additionalInfo": {
+      "description": "30..35 C: WARNING alarm only. >35 C: CRITICAL alarm + email (Created and Updated)."
+    }
+  },
+  "metadata": {
+    "firstNodeIndex": 0,
+    "nodes": [
+      {
+        "type": "org.thingsboard.rule.engine.filter.TbMsgTypeSwitchNode",
+        "name": "Message Type Switch",
+        "debugMode": true,
+        "configurationVersion": 0,
+        "configuration": {},
+        "additionalInfo": {
+          "layoutX": 120,
+          "layoutY": 200
+        }
+      },
+      {
+        "type": "org.thingsboard.rule.engine.telemetry.TbMsgTimeseriesNode",
+        "name": "Save Timeseries",
+        "debugMode": true,
+        "configurationVersion": 0,
+        "configuration": {
+          "defaultTTL": 0
+        },
+        "additionalInfo": {
+          "layoutX": 420,
+          "layoutY": 50
+        }
+      },
+      {
+        "type": "org.thingsboard.rule.engine.filter.TbJsFilterNode",
+        "name": "Valid temperature?",
+        "debugMode": true,
+        "configurationVersion": 0,
+        "configuration": {
+          "scriptLang": "JS",
+          "jsScript": "return typeof msg.temperature === 'number' && isFinite(msg.temperature);"
+        },
+        "additionalInfo": {
+          "layoutX": 420,
+          "layoutY": 240
+        }
+      },
+      {
+        "type": "org.thingsboard.rule.engine.filter.TbJsFilterNode",
+        "name": "Critical: temperature > 35?",
+        "debugMode": true,
+        "configurationVersion": 0,
+        "configuration": {
+          "scriptLang": "JS",
+          "jsScript": "return msg.temperature > 35;"
+        },
+        "additionalInfo": {
+          "layoutX": 720,
+          "layoutY": 200
+        }
+      },
+      {
+        "type": "org.thingsboard.rule.engine.filter.TbJsFilterNode",
+        "name": "Warning: 30 <= temperature <= 35?",
+        "debugMode": true,
+        "configurationVersion": 0,
+        "configuration": {
+          "scriptLang": "JS",
+          "jsScript": "return msg.temperature >= 30 && msg.temperature <= 35;"
+        },
+        "additionalInfo": {
+          "layoutX": 1020,
+          "layoutY": 400
+        }
+      },
+      {
+        "type": "org.thingsboard.rule.engine.transform.TbTransformMsgNode",
+        "name": "Keep temperature for email",
+        "debugMode": true,
+        "configurationVersion": 0,
+        "configuration": {
+          "scriptLang": "JS",
+          "jsScript": "metadata.alertTemperature = String(msg.temperature);\nmetadata.alertDevice = metadata.deviceName || 'Unknown device';\nreturn {msg: msg, metadata: metadata, msgType: msgType};"
+        },
+        "additionalInfo": {
+          "layoutX": 1020,
+          "layoutY": 160
+        }
+      },
+      {
+        "type": "org.thingsboard.rule.engine.action.TbCreateAlarmNode",
+        "name": "Create WARNING Alarm",
+        "debugMode": true,
+        "configurationVersion": 0,
+        "configuration": {
+          "scriptLang": "JS",
+          "alarmType": "HighTemperatureAlert",
+          "severity": "WARNING",
+          "alarmDetailsBuildJs": "return {temperature: msg.temperature, level: 'WARNING', condition: '30 <= temperature <= 35'};",
+          "propagate": false,
+          "useMessageAlarmData": false,
+          "overwriteAlarmDetails": false,
+          "dynamicSeverity": false,
+          "relationTypes": []
+        },
+        "additionalInfo": {
+          "layoutX": 1340,
+          "layoutY": 400
+        }
+      },
+      {
+        "type": "org.thingsboard.rule.engine.action.TbCreateAlarmNode",
+        "name": "Create CRITICAL Alarm",
+        "debugMode": true,
+        "configurationVersion": 0,
+        "configuration": {
+          "scriptLang": "JS",
+          "alarmType": "HighTemperatureAlert",
+          "severity": "CRITICAL",
+          "alarmDetailsBuildJs": "return {temperature: msg.temperature, level: 'CRITICAL', condition: 'temperature > 35'};",
+          "propagate": false,
+          "useMessageAlarmData": false,
+          "overwriteAlarmDetails": false,
+          "dynamicSeverity": false,
+          "relationTypes": []
+        },
+        "additionalInfo": {
+          "layoutX": 1340,
+          "layoutY": 160
+        }
+      },
+      {
+        "type": "org.thingsboard.rule.engine.mail.TbMsgToEmailNode",
+        "name": "To Email - Critical only",
+        "debugMode": true,
+        "configurationVersion": 0,
+        "configuration": {
+          "fromTemplate": "sender@example.com",
+          "toTemplate": "recipient@example.com",
+          "ccTemplate": null,
+          "bccTemplate": null,
+          "subjectTemplate": "[KHAN CAP][CRITICAL] ${alertDevice}: ${alertTemperature} C",
+          "bodyTemplate": "CANH BAO KHAN CAP - IOT LAB 9\nThiet bi: ${alertDevice}\nNhiet do: ${alertTemperature} C\nNguong Critical: tren 35 C\nAlarm: HighTemperatureAlert\nVui long kiem tra thiet bi ngay.",
+          "mailBodyType": "false"
+        },
+        "additionalInfo": {
+          "layoutX": 1670,
+          "layoutY": 160
+        }
+      },
+      {
+        "type": "org.thingsboard.rule.engine.mail.TbSendEmailNode",
+        "name": "Send Email via system SMTP",
+        "debugMode": true,
+        "configurationVersion": 0,
+        "configuration": {
+          "useSystemSmtpSettings": true,
+          "smtpHost": "localhost",
+          "smtpPort": 25,
+          "smtpProtocol": "smtp",
+          "timeout": 10000,
+          "enableTls": false,
+          "username": "",
+          "password": ""
+        },
+        "additionalInfo": {
+          "layoutX": 1970,
+          "layoutY": 160
+        }
+      }
+    ],
+    "connections": [
+      {
+        "fromIndex": 0,
+        "toIndex": 1,
+        "type": "Post telemetry"
+      },
+      {
+        "fromIndex": 0,
+        "toIndex": 2,
+        "type": "Post telemetry"
+      },
+      {
+        "fromIndex": 2,
+        "toIndex": 3,
+        "type": "True"
+      },
+      {
+        "fromIndex": 3,
+        "toIndex": 5,
+        "type": "True"
+      },
+      {
+        "fromIndex": 3,
+        "toIndex": 4,
+        "type": "False"
+      },
+      {
+        "fromIndex": 4,
+        "toIndex": 6,
+        "type": "True"
+      },
+      {
+        "fromIndex": 5,
+        "toIndex": 7,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 7,
+        "toIndex": 8,
+        "type": "Created"
+      },
+      {
+        "fromIndex": 7,
+        "toIndex": 8,
+        "type": "Updated"
+      },
+      {
+        "fromIndex": 8,
+        "toIndex": 9,
+        "type": "Success"
+      }
+    ],
+    "ruleChainConnections": null
+  }
+}
