@@ -1,0 +1,39 @@
+{
+  "ruleChain": {
+    "name": "Smart_Environment_Alert",
+    "type": "CORE",
+    "firstRuleNodeId": null,
+    "root": false,
+    "debugMode": false,
+    "configuration": null,
+    "additionalInfo": { "description": "Bai 1 - khung Rule Chain: Message Type Switch -> Save Timeseries" }
+  },
+  "metadata": {
+    "version": 1,
+    "firstNodeIndex": 0,
+    "nodes": [
+      {
+        "type": "org.thingsboard.rule.engine.filter.TbMsgTypeSwitchNode",
+        "name": "Message Type Switch",
+        "debugSettings": null,
+        "singletonMode": false,
+        "configurationVersion": 0,
+        "configuration": { "version": 0 },
+        "additionalInfo": { "layoutX": 300, "layoutY": 150 }
+      },
+      {
+        "type": "org.thingsboard.rule.engine.telemetry.TbMsgTimeseriesNode",
+        "name": "Save Timeseries",
+        "debugSettings": null,
+        "singletonMode": false,
+        "configurationVersion": 0,
+        "configuration": { "defaultTTL": 0 },
+        "additionalInfo": { "layoutX": 600, "layoutY": 150 }
+      }
+    ],
+    "connections": [
+      { "fromIndex": 0, "toIndex": 1, "type": "Post telemetry" }
+    ],
+    "ruleChainConnections": null
+  }
+}
